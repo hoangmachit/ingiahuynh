@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="root"></div>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script crossorigin
+        src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+    <script type="text/babel">
+        const { useState, useEffect, StrictMode } = React;
+        function App() {
+            const [product, setProduct] = useState({
+                id: 1,
+                name: "Iphone 15 ProMax 2015",
+                price: 15000,
+                handle: 'iphone-15-pro-max-215'
+            });
+            const [configs, setConfigs] = useState([]);
+            useEffect(() => {
+                const fetchData = async () => {
+                    await fetch('http://127.0.0.1:8000/api/configs')
+                        .then((response) => response.json())
+                        .then((res) => {
+                            console.log('>>>>res', res);
+                            setConfigs(res.configs);
+                            setKichThuoc(res.kichThuoc);
+                        });
+                }
+                fetchData();
+            }, []);
+            const [width, setWidth] = useState(100);
+            const [length, setLength] = useState(100);
+            const [kichThuoc, setKichThuoc] = useState([]);
+            const [loading, setLoading] = useState(false);
+            const [isModal, setIsModal] = useState(false);
+            const [chatLieuForm, setChatLieuForm] = useState({
+                so_luong_so_con_tren_1_decal: 0,
+                gia_nl_m2: 0,
+                gia_nl: 0,
+                p_kich_thuoc_id: 0,
+            });
+            const handleKichThuoc = async (e) => {
+                e.preventDefault();
+                setLoading(true);
+                const formData = new FormData();
+                formData.append('product_id', 1);
+                formData.append('length', length);
+                formData.append('width', width);
+                await fetch('http://127.0.0.1:8000/api/kich-thuoc/create', {
+                    method: "post",
+                    body: formData,
+                })
+                    .then((response) => response.json())
+                    .then((res) => {
+                        const { alls } = res;
+                        setKichThuoc(alls);
+                        setWidth(0);
+                        setLength(0);
+                    });
+            }
+            const handleKichThuocKhoIn = async (e, item) => {
+                e.preventDefault();
+                const isItemInArray = kichThuoc.some(existingItem => item);
+                if (isItemInArray) {
+                    const updatedArray = kichThuoc.map(existingItem => {
+                        if (item == existingItem) {
+                            const newKhoIn = {
+                                so_luong_so_con_tren_1_decal: 0,
+                                gia_nl_m2: 12000,
+                                gia_nl: 11000
+                            }
+                            return {
+                                ...existingItem,
+                                kich_thuoc_chat_lieu: [...existingItem.kich_thuoc_chat_lieu, newKhoIn],
+                            };
+                        }
+                        return existingItem;
+                    });
+                    setKichThuoc(updatedArray);
+                }
+            }
+            const handleUpdateKhoIn = (e, type, item, itemK) => {
+                e.preventDefault();
+                console.log(e, type, item, itemK);
+                const updatedArray1 = kichThuoc.map(ktItem => {
+                    if (ktItem === item) {
+                        const itemsKhoIns = ktItem.kich_thuoc_chat_lieu;
+                        const updatedArray2 = itemsKhoIns.map(khoInItem => {
+                            if (khoInItem === itemK) {
+                                const newItemK = { ...itemK };
+                                newItemK[type] = e.target.value;
+                                return newItemK;
+                            }
+                            return khoInItem;
+                        });
+                        return { ...ktItem, kich_thuoc_chat_lieu: updatedArray2 };
+                    }
+                    return ktItem;
+                });
+                setKichThuoc(updatedArray1);
+            };
+            const openModalKichThuoc = (e, p_kich_thuoc_chat_lieu_id) => {
+                e.preventDefault();
+                console.log(p_kich_thuoc_chat_lieu_id);
+            }
+            return (
+                <div>
+                    <h1>Admin Product: {product.name}</h1>
+                    <ul>
+                        <li>
+                            Id: {product.id}
+                        </li>
+                        <li>
+                            Price: {product.price}
+                        </li>
+                        <li>
+                            Handle: {product.handle}
+                        </li>
+                    </ul>
+                    <hr />
+                    <div className="boxSize">
+                        <form action="">
+                            <div>
+                                <label htmlFor="length">Chiều dài</label> <br />
+                                <input type="number" id="length" value={length} onChange={(e) => setLength(e.target.value)} />
+                            </div>
+                            <div>
+                                <label htmlFor="width">Chiều rộng</label> <br />
+                                <input type="number" id="width" value={width} onChange={(e) => setWidth(e.target.value)} />
+                            </div>
+                        </form>
+                        <button
+                            className="btnAddSize"
+                            disabled={!width || !length}
+                            onClick={handleKichThuoc}
+                        >Thêm kích thước</button>
+                        <br />
+                        <ul>
+                            {kichThuoc && kichThuoc.length > 0 && kichThuoc.map((item, key) => {
+                                const kichThuocChatLieu = item.kich_thuoc_chat_lieu;
+                                return (
+                                    <li className="item_size" key={key}>
+                                        <div>
+                                            <p>Kích thước Dài: {item.length}mm Rộng: {item.width}mm</p>
+                                        </div>
+                                        <div>
+                                            <p>Khổ in:</p>
+                                            <div>
+                                                <div className="form-group">
+                                                    <div>Số lượng con con trên 1 decal:</div>
+                                                    <input type="text" className="form-control" onChange={(e) => { }} />
+                                                </div>
+                                                <div className="form-group">
+                                                    <div>Giá NL trên 1 m2:</div>
+                                                    <input type="text" className="form-control" onChange={(e) => { }} />
+                                                </div>
+                                                <div className="form-group">
+                                                    <div>Giá NL:</div>
+                                                    <input type="text" className="form-control" onChange={(e) => { }} />
+                                                </div>
+                                                <button
+                                                    onClick={(e) => openModalKichThuoc(e, item.id)}
+                                                >Tạo Kích thước chất liệu</button>
+                                            </div>
+                                            <br />
+                                            <br />
+                                            <ul>
+                                                {kichThuocChatLieu && kichThuocChatLieu.length > 0 && kichThuocChatLieu.map((itemK, keyK) => {
+                                                    return (
+                                                        <li className="item__k" key={keyK}>
+                                                            <div className="form-group">
+                                                                <div>Số lượng con con trên 1 decal:</div>
+                                                                <input type="text" className="form-control" value={itemK.so_luong_so_con_tren_1_decal} onChange={(e) => handleUpdateKhoIn(e, 'so_luong_so_con_tren_1_decal', item, itemK)} />
+                                                            </div>
+                                                            <div className="form-group">
+                                                                <div>Giá NL trên 1 m2:</div>
+                                                                <input type="text" className="form-control" value={itemK.gia_nl_m2} onChange={(e) => handleUpdateKhoIn(e, 'gia_nl_m2', item, itemK)} />
+                                                            </div>
+                                                            <div className="form-group">
+                                                                <div>Giá NL:</div>
+                                                                <input type="text" className="form-control" value={itemK.gia_nl} onChange={(e) => handleUpdateKhoIn(e, 'gia_nl', item, itemK)} />
+                                                            </div>
+                                                        </li>
+                                                    )
+                                                })}
+                                            </ul>
+                                        </div>
+                                    </li>
+                                )
+                            })}
+                        </ul>
+                    </div>
+                    {isModal &&
+                        <div className="modal fade show" style={{ display: "block" }} tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div className="modal-dialog">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h1 className="modal-title fs-5" id="exampleModalLabel">New message</h1>
+                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div className="modal-body">
+                                        <form>
+                                            <div className="mb-3">
+                                                <label htmlFor="so_luong_so_con_tren_1_decal" className="col-form-label">so_luong_so_con_tren_1_decal:</label>
+                                                <input type="text" className="form-control" value={chatLieuForm.so_luong_so_con_tren_1_decal} onChange={(e) => setChatLieuForm({ ...chatLieuForm, so_luong_so_con_tren_1_decal: e.target.value })} id="so_luong_so_con_tren_1_decal" />
+                                            </div>
+                                            <div className="row mb-3">
+                                                <div className="col-md-6">
+                                                    <div className="mb-0">
+                                                        <label htmlFor="gia_nl_m2" className="col-form-label">gia_nl_m2:</label>
+                                                        <input className="form-control" value={chatLieuForm.gia_nl_m2} onChange={(e) => setChatLieuForm({ ...chatLieuForm, gia_nl_m2: e.target.value })} id="gia_nl_m2" />
+                                                    </div>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <div className="mb-0">
+                                                        <label htmlFor="gia_nl" className="col-form-label">gia_nl:</label>
+                                                        <input className="form-control" value={chatLieuForm.gia_nl_m2} id="gia_nl" onChange={(e) => setChatLieuForm({ ...chatLieuForm, gia_nl: e.target.value })} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" className="btn btn-primary">Send message</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            );
+        }
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(
+            <StrictMode>
+                <App />
+            </StrictMode>
+        );
+    </script>
+</body>
+
+</html>
