@@ -14,7 +14,7 @@ class PSoLuongSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 100; $i <= 400; $i++) {
+        for ($i = 100; $i <= 400; $i += 50) {
             DB::table('p_so_luong')->insert([
                 'count' => $i,
                 'created_at' => now(),
