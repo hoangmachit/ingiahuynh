@@ -40,7 +40,7 @@ switch($act)
 {
 	/** options */
 	case "options":
-		get_items();
+		get_item();
 		$template = "product/options/index";
 	break;
 	/* Man */
