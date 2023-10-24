@@ -17,6 +17,7 @@ class CreatePKichThuocChatLieusTable extends Migration
             $table->id();
             $table->foreignId('p_kich_thuoc_id')->constrained('p_kich_thuoc', 'id');
             $table->foreignId('p_chat_lieu_id')->constrained('p_chat_lieu', 'id');
+            $table->foreignId('p_kho_in_id')->constrained('p_kho_in', 'id');
             $table->integer('so_luong_so_con_tren_1_decal')->default(0);
             $table->integer('gia_nl_m2')->default(0);
             $table->integer('gia_nl')->default(0);
