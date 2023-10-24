@@ -3,6 +3,61 @@
   .modal-full {
     max-width: 80% !important;
   }
+
+  .sidebar-overload {
+    position: fixed;
+    top: 0px;
+    width: 60%;
+    height: 100vh;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.5);
+    transition: all 0.5s;
+    left: -100%;
+  }
+
+  .sidebar-option.show .sidebar-overload {
+    left: 0% !important;
+  }
+
+  .sidebar-option {
+    position: fixed;
+    right: -100%;
+    top: 0px;
+    width: 40%;
+    height: 100vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    z-index: 99999;
+    background: #fff;
+    transition: all 0.5s;
+  }
+
+  .sidebar-option.show {
+    right: 0% !important;
+  }
+
+  .sidebar-header {
+    padding: 15px;
+    border-bottom: 1px solid #7b7b7b;
+  }
+
+  .sidebar-body {
+    padding: 15px;
+  }
+
+  .sidebar-close {
+    cursor: pointer;
+  }
+
+  .item__k {
+    padding: 10px 0x;
+    border-bottom: 1px solid #7b7b7b;
+    margin-bottom: 10px;
+  }
+
+  .item__k:last-child {
+    border-bottom: none;
+  }
 </style>
 <!-- Content Header -->
 <section class="content-header text-sm">

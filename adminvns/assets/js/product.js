@@ -4,6 +4,8 @@ function OptionsApp() {
     const [configs, setConfigs] = useState({});
     const [add, setAdd] = useState(false);
     const [modal, setModal] = useState(false);
+    const [sidebar, setSidebar] = useState(false);
+    const [allChatLieu, setAllChatLieu] = useState([]);
     const [detail, setDetail] = useState({});
     /** form Add */
     const formDefault = {
@@ -82,6 +84,18 @@ function OptionsApp() {
                 setModal(false);
             });
     }
+    const handleShowOption = async (e, item) => {
+        e.preventDefault();
+        await fetch(`${API}/get-option.php?kichThuocID=${item.id}`, {
+            method: "GET",
+        }).then(response => response.json())
+            .then((res) => {
+                console.log('>>>handleShowOption', res);
+                setAllChatLieu(res.allChatLieu);
+            }).finally(() => {
+                setSidebar(true);
+            });
+    }
     return (
         <div>
             <div className="card card-primary card-outline text-sm mb-0">
@@ -105,7 +119,7 @@ function OptionsApp() {
                                         <span>{item.length}mm x {item.width}mm</span>
                                     </div>
                                     <div className="box-action">
-                                        <button className="btn btn-secondary"
+                                        <button className="btn btn-primary"
                                             onClick={(e) => {
                                                 openModal(e, item);
                                                 setFormKT({ ...formKT, kt_id: item.id });
@@ -116,9 +130,23 @@ function OptionsApp() {
                                                     lineHeight: 1,
                                                 }}
                                                 className="svg">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-gear" viewBox="0 0 16 16">
-                                                    <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z" />
-                                                    <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z" />
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                                                </svg>
+                                            </span>
+                                        </button>
+                                        <button className="btn btn-secondary ml-2"
+                                            onClick={(e) => handleShowOption(e, item)}
+                                            type="button">
+                                            <span
+                                                style={{
+                                                    lineHeight: 1,
+                                                }}
+                                                className="svg">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                                                    <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
+                                                    <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
                                                 </svg>
                                             </span>
                                         </button>
@@ -377,14 +405,14 @@ function OptionsApp() {
                                     <button
                                         className="btn btn-primary"
                                         type="button"
-                                        // disabled={
-                                        //     !formKT.cl_id ||
-                                        //     !formKT.kt_id ||
-                                        //     !formKT.ki_id ||
-                                        //     !formKT.total_count_decal ||
-                                        //     !formKT.price_nl_m2 ||
-                                        //     !formKT.price_nl
-                                        // }
+                                        disabled={
+                                            !formKT.cl_id ||
+                                            !formKT.kt_id ||
+                                            !formKT.ki_id ||
+                                            !formKT.total_count_decal ||
+                                            !formKT.price_nl_m2 ||
+                                            !formKT.price_nl
+                                        }
                                         onClick={(e) => saveKichThuocOption(e)}
                                     >
                                         Lưu options
@@ -397,6 +425,94 @@ function OptionsApp() {
                 </div >
             )
             }
+            <div className={`sidebar-option ${sidebar ? 'show' : ''}`}>
+                <div className="d-flex justify-content-between align-items-center sidebar-header">
+                    <h3 className="m-0"><b>Danh sách options</b></h3>
+                    <button className="btn btn-secondary sidebar-close"
+                        onClick={() => setSidebar(false)}
+                    >
+                        x
+                    </button>
+                </div>
+                <div className="sidebar-body">
+                    <ul className="m-0 p-0 list-style-none">
+                        {allChatLieu && allChatLieu.length > 0 && allChatLieu.map(item => {
+                            const khoIn = item.khoIn;
+                            const chatLieu = item.chatLieu;
+                            const listMatIn = item.matIn;
+                            const listThoiGian = item.thoiGian;
+                            const listSoLuong = item.soLuong;
+                            const listQuyCach = item.quyCach;
+                            const listCanMang = item.canMang;
+                            return (
+                                <li className="item__k" key={item.id}>
+                                    <div className="form-group">
+                                        <div>Sô con khả thi trên 1 khổ decal: <b>{item.total_count_decal}</b></div>
+                                        <div>Giá NL + ịn 1m: <b>{item.price_nl_m2}</b><dup>đ</dup></div>
+                                        <div>Giá ng NL: <b>{item.price_nl}</b><dup>đ</dup></div>
+                                    </div>
+                                    <div className="row">
+                                        <fieldset class="col-md-4 mb-2">
+                                            <legend class="col-form-label pt-0"><b>Chất Liệu</b></legend>
+                                            <div>
+                                                <span className="badge bg-danger">{chatLieu.name}</span>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="col-md-4 mb-2">
+                                            <legend class="col-form-label pt-0"><b>Số mặt in</b></legend>
+                                            <div>
+                                                {listMatIn && listMatIn.length > 0 && listMatIn.map(item => {
+                                                    return <span key={item.id} className="badge bg-success me-2">{item.name}</span>
+                                                })}
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="col-md-4 mb-2">
+                                            <legend class="col-form-label pt-0"><b>Loại cán màng</b></legend>
+                                            <div>
+                                                {listCanMang && listCanMang.length > 0 && listCanMang.map(item => {
+                                                    return <span key={item.id} className="badge bg-success me-2">{item.name}</span>
+                                                })}
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="col-md-4 mb-2">
+                                            <legend class="col-form-label pt-0"><b>Khổ decal in</b></legend>
+                                            <div>
+                                                {khoIn.left}x{khoIn.right}
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="col-md-4 mb-2">
+                                            <legend class="col-form-label pt-0"><b>Quy cách</b></legend>
+                                            <div>
+                                                {listQuyCach && listQuyCach.length > 0 && listQuyCach.map(item => {
+                                                    return <span key={item.id} className="badge bg-success me-2">{item.name}</span>
+                                                })}
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="col-md-4 mb-2">
+                                            <legend class="col-form-label pt-0"><b>Số lượng</b></legend>
+                                            <div>
+                                                {listSoLuong && listSoLuong.length > 0 && listSoLuong.map(item => {
+                                                    return <span key={item.id} className="badge bg-success me-2">{item.count}</span>
+                                                })}
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="col-md-4 mb-2">
+                                            <legend class="col-form-label pt-0"><b>Thời gian</b></legend>
+                                            <div>
+                                                {listThoiGian && listThoiGian.length > 0 && listThoiGian.map(item => {
+                                                    return <span key={item.id} className="badge bg-success me-2">{item.name}</span>
+                                                })}
+                                            </div>
+                                        </fieldset>
+                                    </div>
+
+                                </li>
+                            )
+                        })}
+                    </ul>
+                </div>
+                <div className="sidebar-overload"></div>
+            </div>
         </div >
     )
 }
