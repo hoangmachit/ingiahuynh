@@ -4,6 +4,7 @@ use App\Models\PCanMang;
 use App\Models\PChatLieu;
 use App\Models\PKhoIn;
 use App\Models\PKichThuoc;
+use App\Models\PKichThuocChatLieu;
 use App\Models\PMatIn;
 use App\Models\PQuyCach;
 use App\Models\PSoLuong;
@@ -62,5 +63,15 @@ Route::prefix('kich-thuoc')->group(function () {
         return response()->json([
             'success' => false,
         ]);
+    });
+    Route::prefix('chat-lieu')->group(function () {
+        Route::post('create', function (Request $request) {
+            $data = $request->json()->all();
+            $chatLieu = PKichThuocChatLieu::create($data);
+            return response()->json([
+                'success' => true,
+                'chatLieu' => $chatLieu,
+            ]);
+        });
     });
 });
