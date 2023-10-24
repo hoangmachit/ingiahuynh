@@ -31,8 +31,8 @@ function App() {
         gia_nl: 0,
         p_kich_thuoc_id: 0,
         p_chat_lieu_id: 0,
+        p_kho_in_id: 0,
         p_kich_thuoc_can_mang: [],
-        p_kich_thuoc_kho_in: [],
         p_kich_thuoc_mat_in: [],
         p_kich_thuoc_quy_cach: [],
         p_kich_thuoc_so_luong: [],
@@ -75,7 +75,7 @@ function App() {
     }
     return (
         <div>
-            <h1>Admin Product: {product.name}</h1>
+            <h1>Admin Product: <a target="blank" href="detail.html">{product.name}</a></h1>
             <ul>
                 <li>
                     Id: {product.id}
@@ -108,12 +108,6 @@ function App() {
                 <ul>
                     {kichThuoc && kichThuoc.length > 0 && kichThuoc.map((item, key) => {
                         const kichThuocChatLieu = item.kich_thuoc_chat_lieu;
-                        const listKhoIn = item.kho_in;
-                        const listSoLuong = item.so_luong;
-                        const listCanMang = item.can_mang;
-                        const listMatIn = item.mat_in;
-                        const listQuyCach = item.quy_cach;
-                        const listThoiGian = item.thoi_gian;
                         return (
                             <li className="item_size" key={key}>
                                 <div>
@@ -131,6 +125,12 @@ function App() {
                                     <br />
                                     <ul>
                                         {kichThuocChatLieu && kichThuocChatLieu.length > 0 && kichThuocChatLieu.map((itemK, keyK) => {
+                                            const listSoLuong = itemK.so_luong;
+                                            const listCanMang = itemK.can_mang;
+                                            const listMatIn = itemK.mat_in;
+                                            const listQuyCach = itemK.quy_cach;
+                                            const listThoiGian = itemK.thoi_gian;
+                                            const chatLieu = itemK.chat_lieu;
                                             return (
                                                 <li className="item__k" key={keyK}>
                                                     <div className="form-group">
@@ -146,6 +146,12 @@ function App() {
                                                         <input type="text" className="form-control" defaultValue={itemK.gia_nl} />
                                                     </div>
                                                     <hr />
+                                                    <fieldset class="row mb-3">
+                                                        <legend class="col-form-label col-sm-2 pt-0">TRƯỜNG chất Liệu</legend>
+                                                        <div>
+                                                            <span className="badge bg-danger">{chatLieu.name}</span>
+                                                        </div>
+                                                    </fieldset>
                                                     <fieldset class="row mb-3">
                                                         <legend class="col-form-label col-sm-2 pt-0">TRƯỜNG số mặt in</legend>
                                                         <div>
@@ -173,9 +179,7 @@ function App() {
                                                     <fieldset class="row mb-3">
                                                         <legend class="col-form-label col-sm-2 pt-0">khổ decal in</legend>
                                                         <div>
-                                                            {listKhoIn && listKhoIn.length > 0 && listKhoIn.map(item => {
-                                                                return <span key={item.id} className="badge bg-success me-2">{item.left} x {item.right}</span>
-                                                            })}
+                                                            {itemK.kho_in.left}x{itemK.kho_in.right}
                                                         </div>
                                                     </fieldset>
                                                     <fieldset class="row mb-3">
@@ -221,15 +225,30 @@ function App() {
                                             <label htmlFor="so_luong_so_con_tren_1_decal" className="col-form-label">so_luong_so_con_tren_1_decal:</label>
                                             <input type="number" className="form-control" value={chatLieuForm.so_luong_so_con_tren_1_decal} onChange={(e) => setChatLieuForm({ ...chatLieuForm, so_luong_so_con_tren_1_decal: e.target.value })} id="so_luong_so_con_tren_1_decal" />
                                         </div>
-                                        <div className="col-md-6">
-                                            <div className="mb-0">
-                                                <label htmlFor="p_chat_lieu_id" className="col-form-label">p_chat_lieu_id:</label>
-                                                <select name="p_chat_lieu_id" id="p_chat_lieu_id" onChange={(e) => setChatLieuForm({ ...chatLieuForm, p_chat_lieu_id: e.target.value })} className="form-control" value={chatLieuForm.p_chat_lieu_id}>
-                                                    <option value="">Choice Chat Lieu ID</option>
-                                                    {configs.chatLieu.map(item => {
-                                                        return <option value={item.id} key={item.id}>{item.name}</option>
-                                                    })}
-                                                </select>
+                                        <div className="row mb-3">
+                                            <div className="col-md-6">
+                                                <div className="mb-0">
+                                                    <label htmlFor="p_chat_lieu_id" className="col-form-label">p_chat_lieu_id:</label>
+                                                    <select name="p_chat_lieu_id" id="p_chat_lieu_id" onChange={(e) => setChatLieuForm({ ...chatLieuForm, p_chat_lieu_id: e.target.value })} className="form-control" value={chatLieuForm.p_chat_lieu_id}>
+                                                        <option value="">Choice Chat Lieu ID</option>
+                                                        {configs.chatLieu.map(item => {
+                                                            return <option value={item.id} key={item.id}>{item.name}</option>
+                                                        })}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-6 mb-3">
+                                                <div className="mb-0">
+                                                    <label htmlFor="p_kho_in_id" className="col-form-label">Khổ in:</label>
+                                                    <select name="p_kho_in_id" id="p_kho_in_id" class="form-control"
+                                                        onChange={(e) => setChatLieuForm({ ...chatLieuForm, p_kho_in_id: e.target.value })} className="form-control" value={chatLieuForm.p_kho_in_id}
+                                                    >
+                                                        <option value="">Choice khổ in</option>
+                                                        {configs.khoIn.map(item => {
+                                                            return <option value={item.id} key={item.id}>{item.left} x {item.right}</option>
+                                                        })}
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                         <div className="row mb-3">
@@ -247,27 +266,6 @@ function App() {
                                             </div>
                                         </div>
                                         <div className="row mb-3">
-                                            <div className="col-md-6 mb-3">
-                                                <div>Khổ in</div>
-                                                {configs.khoIn.map(item => {
-                                                    return (
-                                                        <div className="form-check" key={item.id}>
-                                                            <input className="form-check-input"
-                                                                onChange={(e) => {
-                                                                    const isChecked = e.target.checked;
-                                                                    setChatLieuForm({
-                                                                        ...chatLieuForm,
-                                                                        p_kich_thuoc_kho_in: isChecked ? [...chatLieuForm.p_kich_thuoc_kho_in, item.id] : chatLieuForm.p_kich_thuoc_kho_in.filter(id => id !== item.id),
-                                                                    })
-                                                                }}
-                                                                type="checkbox" value={item.id} id={`kho_in${item.id}`} />
-                                                            <label className="form-check-label" for={`kho_in${item.id}`}>
-                                                                {item.left} x {item.right}
-                                                            </label>
-                                                        </div>
-                                                    )
-                                                })}
-                                            </div>
                                             <div className="col-md-6 mb-3">
                                                 <div>Cán màng</div>
                                                 {configs.camNang.map(item => {
@@ -336,7 +334,7 @@ function App() {
                                                 <div>Số Lượng</div>
                                                 {configs.soLuong.map(item => {
                                                     return (
-                                                        <div className="form-check" key={item.id} style={{ display: "inline-block" }}>
+                                                        <div className="form-check me-2" key={item.id} style={{ display: "inline-block" }}>
                                                             <input className="form-check-input" type="checkbox"
                                                                 onChange={(e) => {
                                                                     const isChecked = e.target.checked;
@@ -357,7 +355,7 @@ function App() {
                                                 <div>Thời gian</div>
                                                 {configs.thoiGian.map(item => {
                                                     return (
-                                                        <div className="form-check" key={item.id} style={{ display: "inline-block" }}>
+                                                        <div className="form-check me-2" key={item.id} style={{ display: "inline-block" }}>
                                                             <input className="form-check-input" type="checkbox"
                                                                 onChange={(e) => {
                                                                     const isChecked = e.target.checked;
