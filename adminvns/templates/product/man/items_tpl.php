@@ -4,6 +4,7 @@ $linkMan = $linkFilter = "index.php?com=product&act=man&type=" . $type . "&p=1";
 $linkAdd = "index.php?com=product&act=add&type=" . $type . "&p=1";
 $linkCopy = "index.php?com=product&act=copy&type=" . $type . "&p=1";
 $linkEdit = "index.php?com=product&act=edit&type=" . $type . "&p=1";
+$linkOptions = "index.php?com=product&act=options&type=" . $type . "&p=1";
 $linkDelete = "index.php?com=product&act=delete&type=" . $type . "&p=1";
 $linkMulti = "index.php?com=product&act=man_photo&kind=man&type=" . $type . "&p=1" ;
 $linkPrice = "index.php?com=product&act=man_price&type=" . $type . "&p=1";
@@ -81,9 +82,7 @@ $copyImg = (isset($config['product'][$type]['copy_image']) && $config['product']
             <?php if (isset($config['product'][$type]['gallery']) && count($config['product'][$type]['gallery']) > 0) { ?>
               <th class="align-middle">Gallery</th>
             <?php } ?>
-            <?php if (isset($config['product'][$type]['size']) && $config['product'][$type]['size'] == true) { ?>
-              <th class="align-middle">Size</th>
-            <?php } ?>
+            <th class="align-middle">Options</th>
             <?php if (isset($config['product'][$type]['check'])) {
               foreach ($config['product'][$type]['check'] as $key => $value) { ?>
                 <th class="align-middle text-center"><?= $value ?></th>
@@ -159,47 +158,9 @@ $copyImg = (isset($config['product'][$type]['copy_image']) && $config['product']
                     </div>
                   </td>
                 <?php } ?>
-                <?php if (isset($config['product'][$type]['size']) && $config['product'][$type]['size'] == true) { ?>
                 <td class="align-middle">
-                    <div class="dropdown">
-                      <button type="button" class="btn btn-sm bg-gradient-info dropdown-toggle" id="dropdown-size" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Thiết lập giá</button>
-
-                      <div class="dropdown-menu" aria-labelledby="dropdown-size" x-placement="bottom-start">
-                          <?php if (isset($config['product'][$type]['size']) && $config['product'][$type]['size'] == true) { ?>
-                              <a class="dropdown-item" href="<?= $linkPrice ?>&type2=size&idc=<?= $items[$i]['id'] ?>" title="Kích thước">Kích thước</a>
-                          <?php } ?>
-                          <?php if (isset($config['product'][$type]['chatlieu']) && $config['product'][$type]['chatlieu'] == true) { ?>
-                              <a class="dropdown-item" href="<?= $linkPrice ?>&type2=chatlieu&idc=<?= $items[$i]['id'] ?>" title="Chất liệu">Chất liệu</a>
-                          <?php } ?>
-                          <?php if (isset($config['product'][$type]['somat']) && $config['product'][$type]['somat'] == true) { ?>
-                              <a class="dropdown-item" href="<?= $linkPrice ?>&type2=somat&idc=<?= $items[$i]['id'] ?>" title="Số mặt">Số mặt</a>
-                          <?php } ?>
-                          <?php if (isset($config['product'][$type]['canmang']) && $config['product'][$type]['canmang'] == true) { ?>
-                              <a class="dropdown-item" href="<?= $linkPrice ?>&type2=canmang&idc=<?= $items[$i]['id'] ?>" title="Cán màng">Cán màng</a>
-                          <?php } ?>
-                          <?php if (isset($config['product'][$type]['khoanlo']) && $config['product'][$type]['khoanlo'] == true) { ?>
-                              <a class="dropdown-item" href="<?= $linkPrice ?>&type2=khoanlo&idc=<?= $items[$i]['id'] ?>" title="Khoan lỗ">Khoan lỗ</a>
-                          <?php } ?>
-                          <?php if (isset($config['product'][$type]['soduongcung']) && $config['product'][$type]['soduongcung'] == true) { ?>
-                              <a class="dropdown-item" href="<?= $linkPrice ?>&type2=soduongcung&idc=<?= $items[$i]['id'] ?>" title="Số đường cứng">Số đường cứng</a>
-                          <?php } ?>
-                          <?php if (isset($config['product'][$type]['hinhdang']) && $config['product'][$type]['hinhdang'] == true) { ?>
-                              <a class="dropdown-item" href="<?= $linkPrice ?>&type2=hinhdang&idc=<?= $items[$i]['id'] ?>" title="Hình dạng">Hình dạng</a>
-                          <?php } ?>
-                          <?php if (isset($config['product'][$type]['cachthuc']) && $config['product'][$type]['cachthuc'] == true) { ?>
-                              <a class="dropdown-item" href="<?= $linkPrice ?>&type2=cachthuc&idc=<?= $items[$i]['id'] ?>" title="Cách thức">Cách thức</a>
-                          <?php } ?>
-                          <?php if (isset($config['product'][$type]['kieube']) && $config['product'][$type]['kieube'] == true) { ?>
-                              <a class="dropdown-item" href="<?= $linkPrice ?>&type2=kieube&idc=<?= $items[$i]['id'] ?>" title="Kiểu bế">Kiểu bế</a>
-                          <?php } ?>
-                          <?php if (isset($config['product'][$type]['soluong']) && $config['product'][$type]['soluong'] == true) { ?>
-                              <a class="dropdown-item" href="<?= $linkPrice ?>&type2=soluong&idc=<?= $items[$i]['id'] ?>" title="Số lượng">Số lượng</a>
-                          <?php } ?>
-                        </div>
-                    </div>
-                  </td>
-
-                  <?php } ?>
+                  <a href="<?= $linkOptions ?><?= $linkID ?>&id=<?= $items[$i]['id'] ?>" title="<?= $items[$i]['tenvi'] ?>" class="btn btn-sm bg-gradient-info">Thiết lập options</a>
+                </td>
                 <?php if (isset($config['product'][$type]['check'])) {
                   foreach ($config['product'][$type]['check'] as $key => $value) { ?>
                     <td class="align-middle text-center">

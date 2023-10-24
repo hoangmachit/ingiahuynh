@@ -38,6 +38,11 @@ else
 
 switch($act)
 {
+	/** options */
+	case "options":
+		get_items();
+		$template = "product/options/index";
+	break;
 	/* Man */
 	case "man":
 	get_items();
@@ -63,7 +68,7 @@ switch($act)
 	case "delete":
 	delete_item();
 	break;
-
+	
 	/* Size */
 	case "man_size":
 	get_items_size();
