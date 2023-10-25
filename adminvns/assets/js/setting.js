@@ -1,5 +1,14 @@
 const { useState, useEffect, StrictMode } = React;
 function SettingApp() {
+    const showToast = (text, success) => {
+        Toastify({
+            text: text,
+            className: success ? "success" : "error",
+            gravity: "bottom",
+            position: "center",
+        })
+            .showToast()
+    }
     const [allChatLieu, setAllChatLieu] = useState([]);
     const [allKhoIn, setAllKhoIn] = useState([]);
     const [allMatIn, setAllMatIn] = useState([]);
@@ -71,8 +80,10 @@ function SettingApp() {
         })
             .then(response => response.json())
             .then(async (res) => {
+                const { message, success } = res;
                 setFormChatLieu({ id: 0, name: "" });
                 await getAllData();
+                await showToast(message, success);
             })
     }
     const updateOrCreateKhoIn = async (e) => {
@@ -83,8 +94,10 @@ function SettingApp() {
         })
             .then(response => response.json())
             .then(async (res) => {
+                const { message, success } = res;
                 setFormKhoIn({ id: 0, left: 0, right: 0 });
                 await getAllData();
+                await showToast(message, success);
             })
     }
     const updateOrCreateMatIn = async (e) => {
@@ -95,8 +108,10 @@ function SettingApp() {
         })
             .then(response => response.json())
             .then(async (res) => {
+                const { message, success } = res;
                 setFormMatIn({ id: 0, name: "", percent: 0 });
                 await getAllData();
+                await showToast(message, success);
             })
     }
     const updateOrCreateQuyCach = async (e) => {
@@ -107,8 +122,10 @@ function SettingApp() {
         })
             .then(response => response.json())
             .then(async (res) => {
+                const { message, success } = res;
                 setAllQuyCach({ id: 0, name: "", point: 0 });
                 await getAllData();
+                await showToast(message, success);
             })
     }
     const updateOrCreateSoLuong = async (e) => {
@@ -119,8 +136,10 @@ function SettingApp() {
         })
             .then(response => response.json())
             .then(async (res) => {
+                const { message, success } = res;
                 setFormSoLuong({ id: 0, name: "", point: 0 });
                 await getAllData();
+                await showToast(message, success);
             })
     }
     const updateOrCreateThoiGian = async (e) => {
@@ -131,8 +150,10 @@ function SettingApp() {
         })
             .then(response => response.json())
             .then(async (res) => {
+                const { message, success } = res;
                 setFormThoiGian({ id: 0, name: "", percent: 0 });
                 await getAllData();
+                await showToast(message, success);
             })
     }
     // delete items
@@ -147,7 +168,9 @@ function SettingApp() {
         })
             .then(response => response.json())
             .then(async (res) => {
+                const { message, success } = res;
                 await getAllData();
+                await showToast(message, success);
             })
     }
     return (

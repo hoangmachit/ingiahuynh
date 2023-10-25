@@ -5,7 +5,7 @@ $table = $_POST['table'] ? $_POST['table'] : "";
 if (!$id || !$table) {
     echo json_encode([
         "success" => false,
-        "message" => "Dữ liệu xóa lỗi !",
+        "message" => "Xóa dữ liệu xóa lỗi !",
     ]);
     die;
 }
@@ -15,12 +15,11 @@ if (!$delete) {
     echo json_encode([
         "success" => false,
         "message" => "Dữ liệu đã được sử dụng. Không thể xóa !",
-        "sql" => $sql,
     ]);
     die;
 }
 echo json_encode([
     "success" => true,
-    "message" => "Xóa thành công !",
+    "message" => "Xóa dữ liệu thành công !",
 ]);
 die;

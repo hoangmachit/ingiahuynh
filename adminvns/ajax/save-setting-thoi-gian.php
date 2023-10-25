@@ -13,13 +13,13 @@ if ((int) $data['id']) {
     if (!$update) {
         echo json_encode([
             "success" => false,
-            "message" => "Update fail !",
+            "message" => "Cập nhật dữ liệu thất bại !",
         ]);
         die;
     }
     echo json_encode([
         "success" => true,
-        "message" => "Update success !",
+        "message" => "Cập nhật dữ liệu thành công !",
     ]);
     die;
 }
@@ -33,12 +33,12 @@ $thoiGianId = $d->insert('product_thoi_gians', [
 if (!$thoiGianId) {
     echo json_encode([
         "success" => false,
-        "message" => "Create fail !",
+        "message" => "Tạo mới dữ liệu lỗi !",
     ]);
     die;
 }
 echo json_encode([
     "success" => true,
-    "message" => "Create success !",
+    "message" => "Tạo mới dữ liệu thành công !",
 ]);
 die;

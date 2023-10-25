@@ -1,4 +1,4 @@
-<link href="https://cdn.jsdelivr.net/npm/react-toastify@9.1.3/dist/ReactToastify.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 <style>
   .modal-full {
     max-width: 80% !important;
@@ -58,6 +58,14 @@
   .item__k:last-child {
     border-bottom: none;
   }
+  .toastify.success{
+    background: #a3cfbb;
+    color: #000;
+  }
+  .toastify.error{
+    background: #f8d7da;
+    color: #000;
+  }
 </style>
 <!-- Content Header -->
 <section class="content-header text-sm">
@@ -76,6 +84,7 @@
 
   </div>
 </section>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
