@@ -35,31 +35,6 @@
                 <h3 class="card-title">Export danh sách dữ liệu</h3>
             </div>
             <div class="card-body">
-                <div class="form-group col-md-3 col-sm-4">
-                    <label class="d-block" for="id_sub">Lựa thuộc tính muốn export:</label>
-                    <select name="type2" id="type2" class="form-control" required>
-                        <?php foreach ($arrayselect as $key => $value) { ?>
-                        <option value="<?=$key?>"><?=$value?></option>
-                        <?php } ?>
-                    </select>
-                </div>
-                <?php /*
-                <div class="form-group col-md-3 col-sm-4">
-                    <label class="d-block" for="id_sub">Lựa sản phẩm:</label>
-                    <select name="type2" id="type2" class="form-control" required>
-                        <option value="an-pham">Ấn phẩm</option>
-                        <option value="cua-hang">Chất liệu</option>
-                        <option value="somat">Số mặt</option>
-                        <option value="canmang">Cán màng</option>
-                        <option value="khoanlo">Khoan lỗ</option>
-                        <option value="soduongcung">Số đường cứng</option>
-                        <option value="hinhdang">Hình dạng</option>
-                        <option value="cachthuc">Cách thức</option>
-                        <option value="kieube">Kiểu bế</option>
-                        <option value="soluong">Số lượng</option>
-                    </select>
-                </div>
-                */ ?>
                 <?php if(isset($config['export']['category']) && $config['export']['category'] == true) { ?>
                     <div class="form-group-category row">
                         <?php if(isset($config['product'][$type]['list']) && $config['product'][$type]['list'] == true) { ?>
@@ -86,7 +61,6 @@
                                 <?=$func->get_ajax_category('product', 'sub', $type)?>
                             </div>
                         <?php } ?>
-
                     </div>
                 <?php } else { ?>
                     <div class="alert my-alert alert-info mb-0" role="alert">Xuất danh sách sản phẩm thành tập tin excel</div>

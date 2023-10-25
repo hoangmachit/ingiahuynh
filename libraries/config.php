@@ -1,14 +1,18 @@
 <?php
-if(!defined('LIBRARIES')) die("Error");
-
+if (!defined('LIBRARIES')) die("Error");
 /* Root */
-define('ROOT',__DIR__);
-
+define('ROOT', __DIR__);
+function _dd($data){
+	echo "<pre>";
+	var_dump($data);
+	echo "<pre>";
+	exit();
+}
 /* Timezone */
 date_default_timezone_set('Asia/Ho_Chi_Minh');
 
 /* Cấu hình coder */
-define('VNS_MSHD','MSHD');
+define('VNS_MSHD', 'MSHD');
 
 /* Cấu hình chung */
 $config = array(
@@ -17,10 +21,10 @@ $config = array(
 		'email' => 'tanphat.vinasoftware@gmail.com',
 		'timefinish' => '09/2022'
 	),
-	'arrayDomainSSL' => array("ingiahuynh.dev"),
+	'arrayDomainSSL' => array(),
 	'database' => array(
 		'server-name' => $_SERVER["SERVER_NAME"],
-		'url' => '/',
+		'url' => '/ingiahuynh/',
 		'type' => 'mysql',
 		'host' => 'localhost',
 		'username' => 'root',
@@ -46,25 +50,25 @@ $config = array(
 			'max-height' => 1600
 		),
 		'lang' => array(
-			'vi'=>'Tiếng Việt',
-				// 'en'=>'Tiếng Anh'
+			'vi' => 'Tiếng Việt',
+			// 'en'=>'Tiếng Anh'
 		),
 		'lang-doc' => 'vi|en',
 		'slug' => array(
-			'vi'=>'Tiếng Việt',
-				// 'en'=>'Tiếng Anh'
+			'vi' => 'Tiếng Việt',
+			// 'en'=>'Tiếng Anh'
 		),
 		'seo' => array(
-			'vi'=>'Tiếng Việt',
-				// 'en'=>'Tiếng Anh'
+			'vi' => 'Tiếng Việt',
+			// 'en'=>'Tiếng Anh'
 		),
 		'comlang' => array(
-			"gioi-thieu" => array("vi"=>"gioi-thieu"),
-			"san-pham" => array("vi"=>"san-pham"),
-			"tin-tuc" => array("vi"=>"tin-tuc"),
-			"thu-vien-anh" => array("vi"=>"thu-vien-anh"),
-			"video" => array("vi"=>"video"),
-			"lien-he" => array("vi"=>"lien-he")
+			"gioi-thieu" => array("vi" => "gioi-thieu"),
+			"san-pham" => array("vi" => "san-pham"),
+			"tin-tuc" => array("vi" => "tin-tuc"),
+			"thu-vien-anh" => array("vi" => "thu-vien-anh"),
+			"video" => array("vi" => "video"),
+			"lien-he" => array("vi" => "lien-he")
 		)
 	),
 
@@ -77,7 +81,7 @@ $config = array(
 		)
 	),
 	'cart' => array(
-		'active' => false ,
+		'active' => false,
 	),
 	'order' => array(
 		'ship' => false
@@ -88,8 +92,8 @@ $config = array(
 		'restId' => 'MWFmZGVhMzYtY2U0Zi00MjA0LTg0ODEtZWFkZTZlNmM1MDg4'
 	),
 	'login' => array(
-		'admin' => 'LoginAdmin'.VNS_MSHD,
-		'member' => 'LoginMember'.VNS_MSHD,
+		'admin' => 'LoginAdmin' . VNS_MSHD,
+		'member' => 'LoginMember' . VNS_MSHD,
 		'attempt' => 5,
 		'delay' => 15
 	),
@@ -103,16 +107,15 @@ $config = array(
 error_reporting(($config['website']['error-reporting']) ? E_ALL : 0);
 
 /* Cấu hình base */
-require_once LIBRARIES."checkSSL.php";
+require_once LIBRARIES . "checkSSL.php";
 $http = getProtocol();
 // $http = 'https://';
-$config_url = $config['database']['server-name'].$config['database']['url'];
-$config_base = $http.$config_url;
+$config_url = $config['database']['server-name'] . $config['database']['url'];
+$config_base = $http . $config_url;
 
 /* Cấu hình login */
 $login_admin = $config['login']['admin'];
 $login_member = $config['login']['member'];
 
 /* Cấu hình upload */
-require_once LIBRARIES."constant.php";
-?>
+require_once LIBRARIES . "constant.php";
