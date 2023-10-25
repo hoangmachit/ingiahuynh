@@ -135,6 +135,21 @@ function SettingApp() {
                 await getAllData();
             })
     }
+    // delete items
+    const deleteItem = async (e, item, table) => {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append('id', item.id);
+        formData.append('table', table);
+        await fetch(`${API}/setting-delete-option.php`, {
+            method: "POST",
+            body: formData
+        })
+            .then(response => response.json())
+            .then(async (res) => {
+                await getAllData();
+            })
+    }
     return (
         <div>
             <div className="row">
@@ -142,12 +157,14 @@ function SettingApp() {
                     <div className="card card-primary card-outline text-sm mb-0">
                         <div className="card-header d-flex align-items-center">
                             <h3 className="card-title m-0">Danh sách chất liệu</h3>
-                            <button className="btn btn-primary ml-2"
-                                onClick={(e) => {
-                                    setShowForm({ ...showForm, chat_lieu: true });
-                                    setFormChatLieu({ ...formChatLieu, id: 0, name: "" });
-                                }}
-                            >Thêm</button>
+                            {!showForm.chat_lieu &&
+                                <button className="btn btn-primary ml-2"
+                                    onClick={(e) => {
+                                        setShowForm({ ...showForm, chat_lieu: true });
+                                        setFormChatLieu({ ...formChatLieu, id: 0, name: "" });
+                                    }}
+                                >Thêm</button>
+                            }
                         </div>
                         <div className="card-body pb-3 pt-3">
                             {
@@ -183,7 +200,9 @@ function SettingApp() {
                                                 setShowForm({ ...showForm, chat_lieu: true });
                                             }}
                                         >Edit</button>
-                                        <button className="btn btn-danger">Xóa</button>
+                                        <button className="btn btn-danger"
+                                            onClick={(e) => deleteItem(e, item, 'product_chat_lieus')}
+                                        >Xóa</button>
                                     </div>
                                 </li>
                             })}
@@ -194,12 +213,14 @@ function SettingApp() {
                     <div className="card card-primary card-outline text-sm mb-0">
                         <div className="card-header d-flex align-items-center">
                             <h3 className="card-title m-0">Danh sách khổ in</h3>
-                            <button className="btn btn-primary ml-2"
-                                onClick={(e) => {
-                                    setFormKhoIn({ ...formKhoIn, id: 0, left: 0, right: 0 });
-                                    setShowForm({ ...showForm, kho_in: true });
-                                }}
-                            >Thêm</button>
+                            {!showForm.kho_in &&
+                                <button className="btn btn-primary ml-2"
+                                    onClick={(e) => {
+                                        setFormKhoIn({ ...formKhoIn, id: 0, left: 0, right: 0 });
+                                        setShowForm({ ...showForm, kho_in: true });
+                                    }}
+                                >Thêm</button>
+                            }
                         </div>
                         <div className="card-body pb-3 pt-3">
                             {
@@ -242,7 +263,9 @@ function SettingApp() {
                                                 setShowForm({ ...showForm, kho_in: true });
                                             }}
                                         >Edit</button>
-                                        <button className="btn btn-danger">Xóa</button>
+                                        <button className="btn btn-danger"
+                                            onClick={(e) => deleteItem(e, item, 'product_kho_ins')}
+                                        >Xóa</button>
                                     </div>
                                 </li>
                             })}
@@ -253,12 +276,14 @@ function SettingApp() {
                     <div className="card card-primary card-outline text-sm mb-0">
                         <div className="card-header d-flex align-items-center">
                             <h3 className="card-title m-0">Danh sách mặt in</h3>
-                            <button className="btn btn-primary ml-2"
-                                onClick={(e) => {
-                                    setShowForm({ ...showForm, mat_in: true });
-                                    setFormMatIn({ ...formMatIn, id: 0, name: "", percent: 0 });
-                                }}
-                            >Thêm</button>
+                            {!showForm.mat_in &&
+                                <button className="btn btn-primary ml-2"
+                                    onClick={(e) => {
+                                        setShowForm({ ...showForm, mat_in: true });
+                                        setFormMatIn({ ...formMatIn, id: 0, name: "", percent: 0 });
+                                    }}
+                                >Thêm</button>
+                            }
                         </div>
                         <div className="card-body pb-3 pt-3">
                             {
@@ -302,7 +327,9 @@ function SettingApp() {
                                                 setShowForm({ ...showForm, mat_in: true });
                                             }}
                                         >Edit</button>
-                                        <button className="btn btn-danger">Xóa</button>
+                                        <button className="btn btn-danger"
+                                            onClick={(e) => deleteItem(e, item, 'product_mat_ins')}
+                                        >Xóa</button>
                                     </div>
                                 </li>
                             })}
@@ -313,12 +340,14 @@ function SettingApp() {
                     <div className="card card-primary card-outline text-sm mb-0">
                         <div className="card-header d-flex align-items-center">
                             <h3 className="card-title m-0">Danh sách quy cách</h3>
-                            <button className="btn btn-primary ml-2"
-                                onClick={(e) => {
-                                    setShowForm({ ...showForm, quy_cach: true });
-                                    setFormQuyCach({ ...formQuyCach, id: 0, name: "", point: 0 });
-                                }}
-                            >Thêm</button>
+                            {!showForm.quy_cach &&
+                                <button className="btn btn-primary ml-2"
+                                    onClick={(e) => {
+                                        setShowForm({ ...showForm, quy_cach: true });
+                                        setFormQuyCach({ ...formQuyCach, id: 0, name: "", point: 0 });
+                                    }}
+                                >Thêm</button>
+                            }
                         </div>
                         <div className="card-body pb-3 pt-3">
 
@@ -363,7 +392,9 @@ function SettingApp() {
                                                 setShowForm({ ...showForm, quy_cach: true });
                                             }}
                                         >Edit</button>
-                                        <button className="btn btn-danger">Xóa</button>
+                                        <button className="btn btn-danger"
+                                            onClick={(e) => deleteItem(e, item, 'product_quy_cachs')}
+                                        >Xóa</button>
                                     </div>
                                 </li>
                             })}
@@ -374,12 +405,14 @@ function SettingApp() {
                     <div className="card card-primary card-outline text-sm mb-0">
                         <div className="card-header d-flex align-items-center">
                             <h3 className="card-title m-0">Danh sách số lượng</h3>
-                            <button className="btn btn-primary ml-2"
-                                onClick={(e) => {
-                                    setShowForm({ ...showForm, so_luong: true });
-                                    setFormSoLuong({ ...formSoLuong, id: 0, name: "", count: 50 });
-                                }}
-                            >Thêm</button>
+                            {!showForm.so_luong &&
+                                <button className="btn btn-primary ml-2"
+                                    onClick={(e) => {
+                                        setShowForm({ ...showForm, so_luong: true });
+                                        setFormSoLuong({ ...formSoLuong, id: 0, name: "", count: 50 });
+                                    }}
+                                >Thêm</button>
+                            }
                         </div>
                         <div className="card-body pb-3 pt-3">
                             {
@@ -424,7 +457,9 @@ function SettingApp() {
                                                 setShowForm({ ...showForm, so_luong: true });
                                             }}
                                         >Edit</button>
-                                        <button className="btn btn-danger">Xóa</button>
+                                        <button className="btn btn-danger"
+                                            onClick={(e) => deleteItem(e, item, 'product_so_luongs')}
+                                        >Xóa</button>
                                     </div>
                                 </li>
                             })}
@@ -435,12 +470,14 @@ function SettingApp() {
                     <div className="card card-primary card-outline text-sm mb-0">
                         <div className="card-header d-flex align-items-center">
                             <h3 className="card-title m-0">Danh sách thời gian</h3>
-                            <button className="btn btn-primary ml-2"
-                                onClick={(e) => {
-                                    setShowForm({ ...showForm, thoi_gian: true });
-                                    setFormThoiGian({ ...formThoiGian, name: "", id: 0, percent: 100 });
-                                }}
-                            >Thêm</button>
+                            {!showForm.thoi_gian &&
+                                <button className="btn btn-primary ml-2"
+                                    onClick={(e) => {
+                                        setShowForm({ ...showForm, thoi_gian: true });
+                                        setFormThoiGian({ ...formThoiGian, name: "", id: 0, percent: 100 });
+                                    }}
+                                >Thêm</button>
+                            }
                         </div>
                         <div className="card-body pb-3 pt-3">
                             {
@@ -484,7 +521,9 @@ function SettingApp() {
                                                 setShowForm({ ...showForm, thoi_gian: true });
                                             }}
                                         >Edit</button>
-                                        <button className="btn btn-danger">Xóa</button>
+                                        <button className="btn btn-danger"
+                                            onClick={(e) => deleteItem(e, item, 'product_thoi_gians')}
+                                        >Xóa</button>
                                     </div>
                                 </li>
                             })}
