@@ -97,113 +97,141 @@ function GoogleLanguageTranslatorInit(){new google.translate.TranslateElement({p
     const productID = '<?=$id ?? 0?>';
     const { useState, useEffect, StrictMode } = React;
     function App() {
-        const [allKichThuoc,setAllKichThuoc] = useState([]);
-        const [kichThuocID,setKichThuocID] = useState({});
-        const [allChatLieu,setAllChatLieu] =useState([]);
-        const [chatLieu,setChatLieu] =useState({});
-        const [options,setOptions] = useState({
-            canMang: 0,
-            matIn: 0,
-            quyCach: 0,
-            soLuong: 0,
-            thoiGian: 0
+        const [listKichThuoc,setListKichThuoc] = useState([]);
+        const [firstKichThuoc,setFirstKichThuoc] =useState({});
+
+        // danh sach choice
+
+        const [listChatLieu,setListChatLieu] = useState([]);
+        const [relashion,setRelashion]  =useState({
+            listCanMang: [],
+            listMatIn: [],
+            listQuyCach: [],
+            listSoLuong: [],
+            listThoiGian: [],
         });
+
+        const [chatLieuChoice,setChatLieuChoice] =useState({});
+
+
         const getKichThuocProduct = async()=>{
-            await fetch(`${CONFIG_BASE}/ajax/ajax_kich_thuoc.php?productID=${productID}`)
+            await fetch(`${CONFIG_BASE}/ajax/get.kich-thuoc.php?productID=${productID}`)
             .then(response=>response.json())
             .then(async (res)=>{
                 const { success, result } = res;
                 if(success){
-                    await setAllKichThuoc(result.allKichThuoc);
-                    await setKichThuocID(result.allKichThuoc[0].id);
-                    await setAllChatLieu(result.allChatLieu);
-                    await setChatLieu(result.firstChatLieu);
+                    console.log(">>>> API RESULT",res);
+                    await setListKichThuoc(result.listKichThuoc);
+                    await setFirstKichThuoc(result.listKichThuoc[0]);
                 }
             });
         }
         useEffect(()=>{
             getKichThuocProduct();
         },[]);
-        const changeKichThuoc = (e)=>{
+        const getDataWithKichThuocActive = async (itemChoice) =>{
+            const formData = new FormData();
+            formData.append('kichThuocID',itemChoice.id);
+            return await fetch(`${CONFIG_BASE}/ajax/post.kich-thuoc.php`,{
+                method:"POST",
+                body: formData,
+            })
+            .then(response=>response.json())
+            .then((res)=>{
+                return res;
+            });
+        }
+        const getFullDataChoice = async(chatLieuChoice)=>{
+            const formData = new FormData();
+            console.log("chatLieuChoice",chatLieuChoice);
+            formData.append('kichThuocChatLieuId',chatLieuChoice.id);
+            const result =  await fetch(`${CONFIG_BASE}/ajax/post.chat-lieu.php`,{
+                method:"POST",
+                body: formData,
+            })
+            .then(response=>response.json())
+            .then(res=>{ return res});
+            return result;
+        }
+        const changeKichThuocActive = async (e)=>{
             e.preventDefault();
-            setKichThuocID(e.target.value);
+            const value = e.target.value;
+            const itemChoice = listKichThuoc.find(item=>item.id===value);
+            await setFirstKichThuoc(itemChoice);
+            const result  = await getDataWithKichThuocActive(itemChoice);
+            await setListChatLieu(result.listChatLieu);
+            await setChatLieuChoice(result.chatLieuChoice);
+            const fullData = await getFullDataChoice(result.chatLieuChoice);
+            console.log(">>>fullData",fullData);
+        }
+        const changeChatLieuChoice= async(e) =>{
+            const value = e.target.value;
+            console.log("changeChatLieuChoice",value);
+            const itemChoice = listChatLieu.find(item=>item.id===value);
+            await setChatLieuChoice(itemChoice);
+            const fullData =await getFullDataChoice(itemChoice);
         }
         return (
             <div>
                 <p className="pro-detail-title">Yêu cầu của bạn</p>
-                { allKichThuoc && allKichThuoc.length > 0
+                { listKichThuoc && listKichThuoc.length > 0
                     &&
                         <div>
                             <div className="pro-detail-group">
                                 <label htmlFor="pro-detail-size">- Kích thước</label>
                                 <select
-                                onChange={(e)=>changeKichThuoc(e)}
-                                value={kichThuocID}
-                                name="pro-detail-size" id="pro-detail-size" className="form-pro-detail">
+                                    onChange={(e)=>changeKichThuocActive(e)}
+                                    value={firstKichThuoc ? firstKichThuoc.id : ""}
+                                    name="pro-detail-size" id="pro-detail-size" className="form-pro-detail">
                                     <option value=""> - Chọn kích thước</option>
-                                    { allKichThuoc.map(item=>{
+                                    { listKichThuoc.map(item=>{
                                         return  <option key={item.id} value={item.id}>{ item.length }mm x {item.width}mm</option>
                                     }) }
                                 </select>
                             </div>
                             {
-                                allChatLieu && allChatLieu.length > 0 &&
+                                firstKichThuoc &&
                                 <div>
                                     <div className="pro-detail-group">
                                         <label htmlFor="pro-detail-chatlieu">- Chất liệu giấy</label>
                                         <select
-                                        disabled={!kichThuocID}
-                                        value={chatLieu?chatLieu.id : ""}
-                                        name="pro-detail-chatlieu" id="pro-detail-chatlieu" className="form-pro-detail">
+                                        value={chatLieuChoice? chatLieuChoice.id : ""}
+                                        onChange={(e)=>changeChatLieuChoice(e)}
+                                        name="pro-detail-chatlieu" className="form-pro-detail">
                                             <option value=""> - Chọn Chất liệu giấy</option>
-                                            { allChatLieu && allChatLieu.length && allChatLieu.map(item=>{
-                                                return <option key={item.id} value={item.id}> {item.name}</option>
+                                            { listChatLieu && listChatLieu.length > 0 && listChatLieu.map(item=>{
+                                                return <option value={item.id}>{item.name}</option>
                                             }) }
                                         </select>
                                     </div>
                                     <div className="pro-detail-group">
                                         <label htmlFor="pro-detail-somat">- Số mặt in</label>
-                                        <select disabled={!kichThuocID} name="pro-detail-somat" id="pro-detail-somat" className="form-pro-detail">
+                                        <select name="pro-detail-somat" className="form-pro-detail">
                                             <option value=""> - Chọn Số mặt in</option>
-                                            { chatLieu.matIn && chatLieu.matIn.length && chatLieu.matIn.map(item=>{
-                                                return <option key={item.id} value={item.id}> {item.name}</option>
-                                            }) }
                                         </select>
                                     </div>
                                     <div className="pro-detail-group">
                                         <label htmlFor="pro-detail-canmang">- Loại cán màng</label>
-                                        <select disabled={!kichThuocID} name="pro-detail-canmang" id="pro-detail-canmang" className="form-pro-detail">
+                                        <select name="pro-detail-canmang" className="form-pro-detail">
                                             <option value=""> - Chọn Loại cán màng</option>
-                                            { chatLieu.canMang && chatLieu.canMang.length && chatLieu.canMang.map(item=>{
-                                                return <option key={item.id} value={item.id}> {item.name}</option>
-                                            }) }
                                         </select>
                                     </div>
                                     <div className="pro-detail-group">
                                         <label htmlFor="pro-detail-soduongcung">- Qui cách</label>
-                                        <select disabled={!kichThuocID} name="pro-detail-soduongcung" id="pro-detail-soduongcung" className="form-pro-detail">
+                                        <select name="pro-detail-soduongcung" className="form-pro-detail">
                                             <option value=""> - Chọn Qui cách</option>
-                                            { chatLieu.quyCach && chatLieu.quyCach.length && chatLieu.quyCach.map(item=>{
-                                                return <option key={item.id} value={item.id}> {item.name}</option>
-                                            }) }
                                         </select>
                                     </div>
                                     <div className="pro-detail-group">
                                         <label htmlFor="pro-detail-soluong">- Số lượng</label>
-                                        <select disabled={!kichThuocID} name="pro-detail-soluong" id="pro-detail-soluong" className="form-pro-detail">
+                                        <select name="pro-detail-soluong" className="form-pro-detail">
                                             <option value=""> - Chọn Số lượng</option>
-                                            { chatLieu.soLuong && chatLieu.soLuong.length && chatLieu.soLuong.map(item=>{
-                                                return <option key={item.id} value={item.id}> {item.name}</option>
-                                            }) }
                                         </select>
                                     </div>
                                     <div className="pro-detail-group">
                                         <label htmlFor="pro-detail-hinhdang">- Thời gian</label>
-                                        <select disabled={!kichThuocID} name="pro-detail-hinhdang" id="pro-detail-hinhdang" className="form-pro-detail">
+                                        <select name="pro-detail-hinhdang" className="form-pro-detail">
                                             <option value=""> - Chọn Thời gian</option>
-                                            { chatLieu.thoiGian && chatLieu.thoiGian.length && chatLieu.thoiGian.map(item=>{
-                                                return <option key={item.id} value={item.id}> {item.name}</option>
-                                            }) }
                                         </select>
                                     </div>
                             </div>

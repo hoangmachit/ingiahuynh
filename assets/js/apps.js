@@ -795,32 +795,32 @@ if($(".form-cart").exists())
      }
  });
 };
-$("body").on("change","select.form-pro-detail",function(){
-    id = $('#pro-detail-id').val();
-    var type = $(".attr-pro-detail").data('type');
+// $("body").on("change","select.form-pro-detail",function(){
+//     id = $('#pro-detail-id').val();
+//     var type = $(".attr-pro-detail").data('type');
 
-    kichthuoc = $('#pro-detail-size').val();
-    chatlieu = $('#pro-detail-chatlieu').val();
-    somat = $('#pro-detail-somat').val();
-    canmang = $('#pro-detail-canmang').val();
-    khoanlo = $('#pro-detail-khoanlo').val();
-    soduongcung = $('#pro-detail-soduongcung').val();
-    hinhdang = $('#pro-detail-hinhdang').val();
-    cachthuc = $('#pro-detail-cachthuc').val();
-    kieube = $('#pro-detail-kieube').val();
-    soluong = $('#pro-detail-soluong').val();
-    $.ajax({
-        url:'ajax/ajax_combo.php',
-        type: "POST",
-        dataType: 'json',
-        async: false,
-        data: {id:id,type:type,kichthuoc:kichthuoc,chatlieu:chatlieu,somat:somat,canmang:canmang,khoanlo:khoanlo,soduongcung:soduongcung,hinhdang:hinhdang,cachthuc:cachthuc,kieube:kieube,soluong:soluong},
-        success: function(result){
-            $('.pro-detail-total-price span').html(result.totaltext);
-            $('#total-price').val(result.total);
-        }
-    });
-});
+//     kichthuoc = $('#pro-detail-size').val();
+//     chatlieu = $('#pro-detail-chatlieu').val();
+//     somat = $('#pro-detail-somat').val();
+//     canmang = $('#pro-detail-canmang').val();
+//     khoanlo = $('#pro-detail-khoanlo').val();
+//     soduongcung = $('#pro-detail-soduongcung').val();
+//     hinhdang = $('#pro-detail-hinhdang').val();
+//     cachthuc = $('#pro-detail-cachthuc').val();
+//     kieube = $('#pro-detail-kieube').val();
+//     soluong = $('#pro-detail-soluong').val();
+//     $.ajax({
+//         url:'ajax/ajax_combo.php',
+//         type: "POST",
+//         dataType: 'json',
+//         async: false,
+//         data: {id:id,type:type,kichthuoc:kichthuoc,chatlieu:chatlieu,somat:somat,canmang:canmang,khoanlo:khoanlo,soduongcung:soduongcung,hinhdang:hinhdang,cachthuc:cachthuc,kieube:kieube,soluong:soluong},
+//         success: function(result){
+//             $('.pro-detail-total-price span').html(result.totaltext);
+//             $('#total-price').val(result.total);
+//         }
+//     });
+// });
 
 $("body").on("click",".pro-detail-file a",function(){
     $('.pro-detail-file a').removeClass("active");
