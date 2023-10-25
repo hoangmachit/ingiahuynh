@@ -97,9 +97,9 @@ function GoogleLanguageTranslatorInit(){new google.translate.TranslateElement({p
     const productID = '<?=$id ?? 0?>';
     const { useState, useEffect, StrictMode } = React;
     function App() {
-        const [listKichThuoc, setListKichThuoc] = useState([]);
+        const [dsKichThuoc, setDsKichThuoc] = useState([]);
 
-        const [kichThuoc, setKichThuoc] =useState({});
+        const [detailKichThuoc, setDetailKichThuoc] =useState({});
 
         const [listChatLieu, setListChatLieu] = useState([]);
 
@@ -114,38 +114,42 @@ function GoogleLanguageTranslatorInit(){new google.translate.TranslateElement({p
 
         const [chatLieuChoice,setChatLieuChoice] =useState({});
 
-        const getFullKichThuoc = async()=>{
-            const {success, result, message} = await fetch(`${CONFIG_BASE}/ajax/get.kich-thuoc.php?productID=${productID}`)
-            .then(response=>response.json())
-            .then((res)=>{return res});
-            if(success){
-                setListKichThuoc(result.listKichThuoc);
-                const itemsChoice =result.listKichThuoc[0];
-                setKichThuoc(itemsChoice);
+        const getDataFirst = async()=>{
+            const formData = new FormData();
+            formData.append('productID',productID);
+            const res = await fetch(`${CONFIG_BASE}/ajax/post.price.php`,{
+                method:"POST",
+                body:formData
+            });
+            if(!res.ok){
+                new Error("123");
             }
+
+            const data =await res.json();
+            console.log(">>>data",data);
         }
         useEffect(()=>{
-            getFullKichThuoc();
+            getDataFirst();
         },[]);
         return (
             <div>
                 <p className="pro-detail-title">Yêu cầu của bạn</p>
-                { listKichThuoc && listKichThuoc.length > 0
+                { dsKichThuoc && setDsKichThuoc.length > 0
                     &&
                         <div>
                             <div className="pro-detail-group">
                                 <label htmlFor="pro-detail-size">- Kích thước</label>
                                 <select
-                                    value={kichThuoc ? kichThuoc.id : ""}
+                                    value={""}
                                     name="pro-detail-size" id="pro-detail-size" className="form-pro-detail">
                                     <option value=""> - Chọn kích thước</option>
-                                    { listKichThuoc.map(item=>{
+                                    { dsKichThuoc.map(item=>{
                                         return  <option key={item.id} value={item.id}>{ item.length }mm x {item.width}mm</option>
                                     }) }
                                 </select>
                             </div>
                             {
-                                kichThuoc &&
+                                detailKichThuoc &&
                                 <div>
                                 {listChatLieu && listChatLieu.length > 0 &&
                                     <div className="pro-detail-group">
