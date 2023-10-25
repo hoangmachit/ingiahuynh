@@ -10,10 +10,20 @@ if (!$id || !$table) {
     die;
 }
 $sql = "delete from #_" . $table . " where id='" . $id . "'";
-$delete = $d->rawQuery($sql, array($id));
-if (!$delete) {
+$numRows = $d->rawQueryOne("select * from  #_$table where id = ?", array($id));
+if (empty($numRows)) {
     echo json_encode([
         "success" => false,
+        "message" => "Dữ liệu không tồn tại !",
+    ]);
+    die;
+}
+$delete = $d->rawQueryOne($sql);
+$numRows = $d->rawQueryOne("select * from  #_$table where id = ?", array($id));
+if ($numRows) {
+    echo json_encode([
+        "success" => false,
+        "numRows" => $numRows,
         "message" => "Dữ liệu đã được sử dụng. Không thể xóa !",
     ]);
     die;

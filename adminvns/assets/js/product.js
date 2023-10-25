@@ -1,5 +1,14 @@
 const { useState, useEffect, StrictMode } = React;
 function OptionsApp() {
+    const showToast = (text, success) => {
+        Toastify({
+            text: text,
+            className: success ? "success" : "error",
+            gravity: "bottom",
+            position: "center",
+        })
+            .showToast()
+    }
     const [allKichThuoc, setAllKichThuoc] = useState([]);
     const [configs, setConfigs] = useState({});
     const [add, setAdd] = useState(false);
@@ -40,16 +49,16 @@ function OptionsApp() {
         }
         getConfigs();
     }, []);
+    const getProductKichThuoc = async () => {
+        await fetch(`${API}/get-kich-thuoc.php?productID=${PRODUCT_ID}`)
+            .then(async (response) => await response.json())
+            .then(async (response) => {
+                console.log(response)
+                const { success, alls } = response;
+                setAllKichThuoc(alls);
+            })
+    }
     useEffect(() => {
-        const getProductKichThuoc = async () => {
-            await fetch(`${API}/get-kich-thuoc.php?productID=${PRODUCT_ID}`)
-                .then(async (response) => await response.json())
-                .then(async (response) => {
-                    console.log(response)
-                    const { success, alls } = response;
-                    setAllKichThuoc(alls);
-                })
-        }
         getProductKichThuoc();
     }, []);
     const openModal = (e, item) => {
@@ -62,10 +71,10 @@ function OptionsApp() {
             method: "POST",
             body: JSON.stringify(formAdd),
         }).then(response => response.json())
-            .then((res) => {
-                console.log('>>>saveKichThuocProduct', res);
-                const { detail, success, message } = res;
-                setAllKichThuoc([...allKichThuoc, detail]);
+            .then(async (res) => {
+                const { success, message } = res;
+                await getProductKichThuoc();
+                showToast(message, success);
             }).finally(() => {
                 setAdd(false);
                 setFormAdd(formDefault);
@@ -78,7 +87,8 @@ function OptionsApp() {
             body: JSON.stringify(formKT),
         }).then(response => response.json())
             .then((res) => {
-                console.log('>>>saveKichThuocOption', res);
+                const { success, message } = res;
+                showToast(message, success);
             }).finally(() => {
                 setFormKT(formKTDefault);
                 setModal(false);

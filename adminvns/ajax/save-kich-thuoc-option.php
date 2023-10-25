@@ -2,21 +2,24 @@
 include "ajax_config.php";
 $request_body = file_get_contents("php://input");
 $data = json_decode($request_body, true);
-$kichThuocChatLieuId = $d->insert('product_kich_thuoc_chat_lieus', [
-    'kt_id' => $data['kt_id'],
-    'cl_id' => $data['cl_id'],
-    'ki_id' => $data['ki_id'],
-    'total_count_decal' => $data['total_count_decal'],
-    'price_nl_m2' => $data['price_nl_m2'],
-    'price_nl' => $data['price_nl'],
-    'created_at' => time(),
-    'updated_at' => time(),
-]);
+$now = (new DateTime())->format('Y-m-d H:i:s');
+$dataInsert = [
+    'kt_id' => (int) $data['kt_id'],
+    'cl_id' => (int) $data['cl_id'],
+    'ki_id' => (int) $data['ki_id'],
+    'total_count_decal' => (int) $data['total_count_decal'],
+    'price_nl_m2' => (int) $data['price_nl_m2'],
+    'price_nl' => (int) $data['price_nl'],
+    'created_at' => $now,
+    'updated_at' => $now,
+];
+$kichThuocChatLieuId = $d->insert('product_kich_thuoc_chat_lieus', $dataInsert);
 if (!$kichThuocChatLieuId) {
     echo json_encode([
         "success" => false,
         "message" => "Thêm option thất bại !",
         "kichThuocChatLieuId" => $kichThuocChatLieuId,
+        "dataInsert" => $dataInsert,
     ]);
     die;
 }
