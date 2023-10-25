@@ -29,8 +29,8 @@ if (!empty($idsCanMang)) {
         $d->insert('product_kich_thuoc_chat_lieu_can_mangs', [
             'ktcl_id' => $kichThuocChatLieuId,
             'cm_id' => $item,
-            'created_at' => time(),
-            'updated_at' => time(),
+            'created_at' => $now,
+            'updated_at' => $now,
         ]);
     }
 }
@@ -40,8 +40,8 @@ if (!empty($idsMatIn)) {
         $d->insert('product_kich_thuoc_chat_lieu_mat_ins', [
             'ktcl_id' => $kichThuocChatLieuId,
             'mi_id' => $item,
-            'created_at' => time(),
-            'updated_at' => time(),
+            'created_at' => $now,
+            'updated_at' => $now,
         ]);
     }
 }
@@ -60,8 +60,8 @@ if (!empty($idsThoiGian)) {
         $d->insert('product_kich_thuoc_chat_lieu_thoi_gians', [
             'ktcl_id' => $kichThuocChatLieuId,
             'tg_id' => $item,
-            'created_at' => time(),
-            'updated_at' => time(),
+            'created_at' => $now,
+            'updated_at' => $now,
         ]);
     }
 }
@@ -71,13 +71,14 @@ if (!empty($idsSoluong)) {
         $d->insert('product_kich_thuoc_chat_lieu_soluongs', [
             'ktcl_id' => $kichThuocChatLieuId,
             'sl_id' => $item,
-            'created_at' => time(),
-            'updated_at' => time(),
+            'created_at' => $now,
+            'updated_at' => $now,
         ]);
     }
 }
 echo json_encode([
     "success" => true,
     "message" => "Thêm option thành công !",
+    "data" => $data,
 ]);
 die;

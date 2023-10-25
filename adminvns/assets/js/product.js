@@ -100,7 +100,6 @@ function OptionsApp() {
             method: "GET",
         }).then(response => response.json())
             .then((res) => {
-                console.log('>>>handleShowOption', res);
                 setAllChatLieu(res.allChatLieu);
             }).finally(() => {
                 setSidebar(true);
@@ -445,7 +444,11 @@ function OptionsApp() {
                     </button>
                 </div>
                 <div className="sidebar-body">
-                    <ul className="m-0 p-0 list-style-none">
+                    <ul className="m-0 p-0 list-style-none"
+                        style={{
+                            listStyle:"none"
+                        }}
+                    >
                         {allChatLieu && allChatLieu.length > 0 && allChatLieu.map(item => {
                             const khoIn = item.khoIn;
                             const chatLieu = item.chatLieu;
@@ -472,7 +475,7 @@ function OptionsApp() {
                                             <legend class="col-form-label pt-0"><b>Số mặt in</b></legend>
                                             <div>
                                                 {listMatIn && listMatIn.length > 0 && listMatIn.map(item => {
-                                                    return <span key={item.id} className="badge bg-success me-2">{item.name}</span>
+                                                    return <span key={item.id} className="badge bg-success mr-2">{item.name}</span>
                                                 })}
                                             </div>
                                         </fieldset>
@@ -480,7 +483,7 @@ function OptionsApp() {
                                             <legend class="col-form-label pt-0"><b>Loại cán màng</b></legend>
                                             <div>
                                                 {listCanMang && listCanMang.length > 0 && listCanMang.map(item => {
-                                                    return <span key={item.id} className="badge bg-success me-2">{item.name}</span>
+                                                    return <span key={item.id} className="badge bg-success mr-2">{item.name}</span>
                                                 })}
                                             </div>
                                         </fieldset>
@@ -494,7 +497,7 @@ function OptionsApp() {
                                             <legend class="col-form-label pt-0"><b>Quy cách</b></legend>
                                             <div>
                                                 {listQuyCach && listQuyCach.length > 0 && listQuyCach.map(item => {
-                                                    return <span key={item.id} className="badge bg-success me-2">{item.name}</span>
+                                                    return <span key={item.id} className="badge bg-success mr-2">{item.name}</span>
                                                 })}
                                             </div>
                                         </fieldset>
@@ -502,7 +505,7 @@ function OptionsApp() {
                                             <legend class="col-form-label pt-0"><b>Số lượng</b></legend>
                                             <div>
                                                 {listSoLuong && listSoLuong.length > 0 && listSoLuong.map(item => {
-                                                    return <span key={item.id} className="badge bg-success me-2">{item.count}</span>
+                                                    return <span key={item.id} className="badge bg-success mr-2">{item.count}</span>
                                                 })}
                                             </div>
                                         </fieldset>
@@ -510,7 +513,7 @@ function OptionsApp() {
                                             <legend class="col-form-label pt-0"><b>Thời gian</b></legend>
                                             <div>
                                                 {listThoiGian && listThoiGian.length > 0 && listThoiGian.map(item => {
-                                                    return <span key={item.id} className="badge bg-success me-2">{item.name}</span>
+                                                    return <span key={item.id} className="badge bg-success mr-2">{item.name}</span>
                                                 })}
                                             </div>
                                         </fieldset>
