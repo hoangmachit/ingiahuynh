@@ -2,12 +2,6 @@
 include "ajax_config.php";
 $request_body = file_get_contents("php://input");
 $data = json_decode($request_body, true);
-// echo json_encode([
-//     "success" => false,
-//     "message" => "Thêm kích thước thất bại !",
-//     "data" => $data,
-// ]);
-
 $kichThuocChatLieuId = $d->insert('product_kich_thuoc_chat_lieus', [
     'kt_id' => $data['kt_id'],
     'cl_id' => $data['cl_id'],
@@ -22,7 +16,9 @@ if (!$kichThuocChatLieuId) {
     echo json_encode([
         "success" => false,
         "message" => "Thêm option thất bại !",
+        "kichThuocChatLieuId" => $kichThuocChatLieuId,
     ]);
+    die;
 }
 $idsCanMang = $data['idsCanMang'];
 if (!empty($idsCanMang)) {
@@ -81,3 +77,4 @@ echo json_encode([
     "success" => true,
     "message" => "Thêm option thành công !",
 ]);
+die;

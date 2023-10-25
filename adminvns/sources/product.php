@@ -43,6 +43,9 @@ switch($act)
 		get_item();
 		$template = "product/options/index";
 	break;
+	case "setting_option":
+		$template = "product/options/setting";
+	break;
 	/* Man */
 	case "man":
 	get_items();

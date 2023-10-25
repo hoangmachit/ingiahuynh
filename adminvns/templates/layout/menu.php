@@ -516,6 +516,9 @@
                                         <a class="nav-link <?=$active?>" href="index.php?com=export&act=man&type=<?=$k?>" title="Export"><i class="nav-icon text-sm far fa-caret-square-right"></i><p>Export</p></a>
                                     </li>
                                 <?php } ?>
+                                <li class="nav-item <?=$none?>">
+                                    <a class="nav-link <?=$active?>" href="index.php?com=product&act=setting_option&type=<?=$k?>" title="Cài đặt options"><i class="nav-icon text-sm fas fa-cogs"></i><p>Cài đặt options</p></a>
+                                </li>
                             </ul>
                             
                         </li>
