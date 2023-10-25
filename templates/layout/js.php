@@ -97,80 +97,36 @@ function GoogleLanguageTranslatorInit(){new google.translate.TranslateElement({p
     const productID = '<?=$id ?? 0?>';
     const { useState, useEffect, StrictMode } = React;
     function App() {
-        const [listKichThuoc,setListKichThuoc] = useState([]);
-        const [firstKichThuoc,setFirstKichThuoc] =useState({});
+        const [listKichThuoc, setListKichThuoc] = useState([]);
 
-        // danh sach choice
+        const [kichThuoc, setKichThuoc] =useState({});
 
-        const [listChatLieu,setListChatLieu] = useState([]);
-        const [relashion,setRelashion]  =useState({
+        const [listChatLieu, setListChatLieu] = useState([]);
+
+        const defaultData = {
             listCanMang: [],
             listMatIn: [],
             listQuyCach: [],
             listSoLuong: [],
             listThoiGian: [],
-        });
+        }
+        const [fullData,setFullData]  =useState(defaultData);
 
         const [chatLieuChoice,setChatLieuChoice] =useState({});
 
-
-        const getKichThuocProduct = async()=>{
-            await fetch(`${CONFIG_BASE}/ajax/get.kich-thuoc.php?productID=${productID}`)
+        const getFullKichThuoc = async()=>{
+            const {success, result, message} = await fetch(`${CONFIG_BASE}/ajax/get.kich-thuoc.php?productID=${productID}`)
             .then(response=>response.json())
-            .then(async (res)=>{
-                const { success, result } = res;
-                if(success){
-                    console.log(">>>> API RESULT",res);
-                    await setListKichThuoc(result.listKichThuoc);
-                    await setFirstKichThuoc(result.listKichThuoc[0]);
-                }
-            });
+            .then((res)=>{return res});
+            if(success){
+                setListKichThuoc(result.listKichThuoc);
+                const itemsChoice =result.listKichThuoc[0];
+                setKichThuoc(itemsChoice);
+            }
         }
         useEffect(()=>{
-            getKichThuocProduct();
+            getFullKichThuoc();
         },[]);
-        const getDataWithKichThuocActive = async (itemChoice) =>{
-            const formData = new FormData();
-            formData.append('kichThuocID',itemChoice.id);
-            return await fetch(`${CONFIG_BASE}/ajax/post.kich-thuoc.php`,{
-                method:"POST",
-                body: formData,
-            })
-            .then(response=>response.json())
-            .then((res)=>{
-                return res;
-            });
-        }
-        const getFullDataChoice = async(chatLieuChoice)=>{
-            const formData = new FormData();
-            console.log("chatLieuChoice",chatLieuChoice);
-            formData.append('kichThuocChatLieuId',chatLieuChoice.id);
-            const result =  await fetch(`${CONFIG_BASE}/ajax/post.chat-lieu.php`,{
-                method:"POST",
-                body: formData,
-            })
-            .then(response=>response.json())
-            .then(res=>{ return res});
-            return result;
-        }
-        const changeKichThuocActive = async (e)=>{
-            e.preventDefault();
-            const value = e.target.value;
-            const itemChoice = listKichThuoc.find(item=>item.id===value);
-            await setFirstKichThuoc(itemChoice);
-            const result  = await getDataWithKichThuocActive(itemChoice);
-            await setListChatLieu(result.listChatLieu);
-            await setChatLieuChoice(result.chatLieuChoice);
-            const fullData = await getFullDataChoice(result.chatLieuChoice);
-            await setRelashion(fullData.result);
-        }
-        const changeChatLieuChoice= async(e) =>{
-            const value = e.target.value;
-            const itemChoice = listChatLieu.find(item=>item.id===value);
-            await setChatLieuChoice(itemChoice);
-            const fullData =await getFullDataChoice(itemChoice);
-            await setRelashion(fullData.result);
-        }
         return (
             <div>
                 <p className="pro-detail-title">Yêu cầu của bạn</p>
@@ -180,8 +136,7 @@ function GoogleLanguageTranslatorInit(){new google.translate.TranslateElement({p
                             <div className="pro-detail-group">
                                 <label htmlFor="pro-detail-size">- Kích thước</label>
                                 <select
-                                    onChange={(e)=>changeKichThuocActive(e)}
-                                    value={firstKichThuoc ? firstKichThuoc.id : ""}
+                                    value={kichThuoc ? kichThuoc.id : ""}
                                     name="pro-detail-size" id="pro-detail-size" className="form-pro-detail">
                                     <option value=""> - Chọn kích thước</option>
                                     { listKichThuoc.map(item=>{
@@ -190,14 +145,13 @@ function GoogleLanguageTranslatorInit(){new google.translate.TranslateElement({p
                                 </select>
                             </div>
                             {
-                                firstKichThuoc &&
+                                kichThuoc &&
                                 <div>
                                 {listChatLieu && listChatLieu.length > 0 &&
                                     <div className="pro-detail-group">
                                         <label htmlFor="pro-detail-chatlieu">- Chất liệu giấy</label>
                                         <select
                                         value={chatLieuChoice? chatLieuChoice.id : ""}
-                                        onChange={(e)=>changeChatLieuChoice(e)}
                                         name="pro-detail-chatlieu" className="form-pro-detail">
                                             <option value=""> - Chọn Chất liệu giấy</option>
                                             { listChatLieu.map(item=>{
@@ -206,56 +160,56 @@ function GoogleLanguageTranslatorInit(){new google.translate.TranslateElement({p
                                         </select>
                                     </div>
                                 }
-                                {relashion.listMatIn && relashion.listMatIn.length > 0 &&
+                                {fullData.listMatIn && fullData.listMatIn.length > 0 &&
                                     <div className="pro-detail-group">
                                         <label htmlFor="pro-detail-somat">- Số mặt in</label>
                                         <select name="pro-detail-somat" className="form-pro-detail">
                                             <option value=""> - Chọn Số mặt in</option>
-                                            { relashion.listMatIn.map(item=>{
+                                            { fullData.listMatIn.map(item=>{
                                                 return <option value={item.id1}>{item.name}</option>
                                             })  }
                                         </select>
                                     </div>
                                 }
-                                {relashion.listCanMang && relashion.listCanMang.length > 0 &&
+                                {fullData.listCanMang && fullData.listCanMang.length > 0 &&
                                     <div className="pro-detail-group">
                                         <label htmlFor="pro-detail-canmang">- Loại cán màng</label>
                                         <select name="pro-detail-canmang" className="form-pro-detail">
                                             <option value=""> - Chọn Loại cán màng</option>
-                                            {  relashion.listCanMang.map(item=>{
+                                            {  fullData.listCanMang.map(item=>{
                                                 return <option value={item.id1}>{item.name}</option>
                                             })  }
                                         </select>
                                     </div>
                                 }
-                                {relashion.listQuyCach && relashion.listQuyCach.length > 0 &&
+                                {fullData.listQuyCach && fullData.listQuyCach.length > 0 &&
                                     <div className="pro-detail-group">
                                         <label htmlFor="pro-detail-soduongcung">- Qui cách</label>
                                         <select name="pro-detail-soduongcung" className="form-pro-detail">
                                             <option value=""> - Chọn Qui cách</option>
-                                            {  relashion.listQuyCach.map(item=>{
+                                            {  fullData.listQuyCach.map(item=>{
                                                 return <option value={item.id1}>{item.name}</option>
                                             })  }
                                         </select>
                                     </div>
                                 }
-                                {relashion.listSoLuong && relashion.listSoLuong.length > 0 &&
+                                {fullData.listSoLuong && fullData.listSoLuong.length > 0 &&
                                     <div className="pro-detail-group">
                                         <label htmlFor="pro-detail-soluong">- Số lượng</label>
                                         <select name="pro-detail-soluong" className="form-pro-detail">
                                             <option value=""> - Chọn Số lượng</option>
-                                            {  relashion.listSoLuong.map(item=>{
+                                            {  fullData.listSoLuong.map(item=>{
                                                 return <option value={item.id1}>{item.name}</option>
                                             })  }
                                         </select>
                                     </div>
                                 }
-                                { relashion.listThoiGian && relashion.listThoiGian.length > 0 &&
+                                { fullData.listThoiGian && fullData.listThoiGian.length > 0 &&
                                     <div className="pro-detail-group">
                                         <label htmlFor="pro-detail-hinhdang">- Thời gian</label>
                                         <select name="pro-detail-hinhdang" className="form-pro-detail">
                                             <option value=""> - Chọn Thời gian</option>
-                                            {  relashion.listThoiGian.map(item=>{
+                                            {  fullData.listThoiGian.map(item=>{
                                                 return <option value={item.id1}>{item.name}</option>
                                             })  }
                                         </select>
