@@ -6,22 +6,22 @@ function SettingApp() {
     const [allQuyCach, setAllQuyCach] = useState([]);
     const [allSoLuong, setAllSoLuong] = useState([]);
     const [allThoiGian, setAllThoiGian] = useState([]);
-    useEffect(() => {
-        const getAllData = async () => {
-            await fetch(`${API}/setting-option.php`, {
-                method: "GET",
+    const getAllData = async () => {
+        await fetch(`${API}/setting-option.php`, {
+            method: "GET",
+        })
+            .then(response => response.json())
+            .then((res) => {
+                const { result } = res;
+                setAllChatLieu(result.allChatLieu);
+                setAllKhoIn(result.allKhoIn);
+                setAllMatIn(result.allMatIn);
+                setAllQuyCach(result.allQuyCach);
+                setAllSoLuong(result.allSoLuong);
+                setAllThoiGian(result.allThoiGian);
             })
-                .then(response => response.json())
-                .then((res) => {
-                    const { result } = res;
-                    setAllChatLieu(result.allChatLieu);
-                    setAllKhoIn(result.allKhoIn);
-                    setAllMatIn(result.allMatIn);
-                    setAllQuyCach(result.allQuyCach);
-                    setAllSoLuong(result.allSoLuong);
-                    setAllThoiGian(result.allThoiGian);
-                })
-        }
+    }
+    useEffect(() => {
         getAllData();
     }, []);
     const [formChatLieu, setFormChatLieu] = useState({
@@ -61,6 +61,80 @@ function SettingApp() {
         so_luong: false,
         thoi_gian: false,
     });
+
+    // handle save and update form
+    const updateOrCreateChatLieu = async (e) => {
+        e.preventDefault();
+        await fetch(`${API}/save-setting-chat-lieu.php`, {
+            method: "POST",
+            body: JSON.stringify(formChatLieu)
+        })
+            .then(response => response.json())
+            .then(async (res) => {
+                setFormChatLieu({ id: 0, name: "" });
+                await getAllData();
+            })
+    }
+    const updateOrCreateKhoIn = async (e) => {
+        e.preventDefault();
+        await fetch(`${API}/save-setting-kho-in.php`, {
+            method: "POST",
+            body: JSON.stringify(formKhoIn)
+        })
+            .then(response => response.json())
+            .then(async (res) => {
+                setFormKhoIn({ id: 0, left: 0, right: 0 });
+                await getAllData();
+            })
+    }
+    const updateOrCreateMatIn = async (e) => {
+        e.preventDefault();
+        await fetch(`${API}/save-setting-mat-in.php`, {
+            method: "POST",
+            body: JSON.stringify(formMatIn)
+        })
+            .then(response => response.json())
+            .then(async (res) => {
+                setFormMatIn({ id: 0, name: "", percent: 0 });
+                await getAllData();
+            })
+    }
+    const updateOrCreateQuyCach = async (e) => {
+        e.preventDefault();
+        await fetch(`${API}/save-setting-quy-cach.php`, {
+            method: "POST",
+            body: JSON.stringify(formQuyCach)
+        })
+            .then(response => response.json())
+            .then(async (res) => {
+                setAllQuyCach({ id: 0, name: "", point: 0 });
+                await getAllData();
+            })
+    }
+    const updateOrCreateSoLuong = async (e) => {
+        e.preventDefault();
+        await fetch(`${API}/save-setting-so-luong.php`, {
+            method: "POST",
+            body: JSON.stringify(formSoLuong)
+        })
+            .then(response => response.json())
+            .then(async (res) => {
+                setFormSoLuong({ id: 0, name: "", point: 0 });
+                await getAllData();
+            })
+    }
+    const updateOrCreateThoiGian = async (e) => {
+        e.preventDefault();
+        await fetch(`${API}/save-setting-thoi-gian.php`, {
+            method: "POST",
+            body: JSON.stringify(formThoiGian)
+        })
+            .then(response => response.json())
+            .then(async (res) => {
+                setFormThoiGian({ id: 0, name: "", percent: 0 });
+                await getAllData();
+            })
+    }
     return (
         <div>
             <div className="row">
@@ -69,13 +143,16 @@ function SettingApp() {
                         <div className="card-header d-flex align-items-center">
                             <h3 className="card-title m-0">Danh sách chất liệu</h3>
                             <button className="btn btn-primary ml-2"
-                                onClick={(e) => setShowForm({ ...showForm, chat_lieu: true })}
+                                onClick={(e) => {
+                                    setShowForm({ ...showForm, chat_lieu: true });
+                                    setFormChatLieu({ ...formChatLieu, id: 0, name: "" });
+                                }}
                             >Thêm</button>
                         </div>
                         <div className="card-body pb-3 pt-3">
                             {
                                 showForm.chat_lieu &&
-                                <form>
+                                <form onSubmit={(e) => updateOrCreateChatLieu(e)} method="POST" role="form">
                                     <div className="mb-3">
                                         <label htmlFor="chat_lieu_name" className="form-label">Tên chất liệu</label>
                                         <input type="text"
@@ -85,7 +162,13 @@ function SettingApp() {
                                     </div>
                                     <button type="submit"
                                         disabled={!formChatLieu.name}
-                                        className="btn btn-success">Lưu chất liệu</button>
+                                        className="btn btn-success"> {formChatLieu.id ? "Cập nhật" : "Lưu"} chất liệu</button>
+                                    <button type="reset"
+                                        onClick={() => {
+                                            setFormChatLieu({ ...formChatLieu, id: 0, name: "" });
+                                            setShowForm({ ...showForm, chat_lieu: false });
+                                        }}
+                                        className="btn btn-warning ml-2"> Hủy bỏ</button>
                                 </form>
                             }
                             {allChatLieu && allChatLieu.length > 0 && allChatLieu.map(item => {
@@ -94,7 +177,12 @@ function SettingApp() {
                                         <span>{item.name}</span>
                                     </div>
                                     <div className="box-action">
-                                        <button className="btn btn-secondary mr-2">Edit</button>
+                                        <button className="btn btn-secondary mr-2"
+                                            onClick={(e) => {
+                                                setFormChatLieu({ ...formChatLieu, name: item.name, id: item.id });
+                                                setShowForm({ ...showForm, chat_lieu: true });
+                                            }}
+                                        >Edit</button>
                                         <button className="btn btn-danger">Xóa</button>
                                     </div>
                                 </li>
@@ -107,13 +195,16 @@ function SettingApp() {
                         <div className="card-header d-flex align-items-center">
                             <h3 className="card-title m-0">Danh sách khổ in</h3>
                             <button className="btn btn-primary ml-2"
-                                onClick={(e) => setShowForm({ ...showForm, kho_in: true })}
+                                onClick={(e) => {
+                                    setFormKhoIn({ ...formKhoIn, id: 0, left: 0, right: 0 });
+                                    setShowForm({ ...showForm, kho_in: true });
+                                }}
                             >Thêm</button>
                         </div>
                         <div className="card-body pb-3 pt-3">
                             {
                                 showForm.kho_in &&
-                                <form>
+                                <form onSubmit={(e) => updateOrCreateKhoIn(e)} method="POST" role="form">
                                     <div className="mb-3">
                                         <label htmlFor="kho_in_left" className="form-label">Left</label>
                                         <input type="number"
@@ -130,7 +221,13 @@ function SettingApp() {
                                     </div>
                                     <button type="submit"
                                         disabled={!formKhoIn.left || !formKhoIn.right}
-                                        className="btn btn-success">Lưu khổ in</button>
+                                        className="btn btn-success">{formKhoIn.id ? "Cập nhật" : "Lưu"} khổ in</button>
+                                    <button type="reset"
+                                        onClick={() => {
+                                            setFormKhoIn({ ...formKhoIn, id: 0, left: 0, right: 0 });
+                                            setShowForm({ ...showForm, kho_in: false })
+                                        }}
+                                        className="btn btn-warning ml-2"> Hủy bỏ</button>
                                 </form>
                             }
                             {allKhoIn && allKhoIn.length > 0 && allKhoIn.map(item => {
@@ -139,7 +236,12 @@ function SettingApp() {
                                         <span>{item.left}x{item.right}</span>
                                     </div>
                                     <div className="box-action">
-                                        <button className="btn btn-secondary mr-2">Edit</button>
+                                        <button className="btn btn-secondary mr-2"
+                                            onClick={(e) => {
+                                                setFormKhoIn({ ...formKhoIn, left: item.left, right: item.right, id: item.id });
+                                                setShowForm({ ...showForm, kho_in: true });
+                                            }}
+                                        >Edit</button>
                                         <button className="btn btn-danger">Xóa</button>
                                     </div>
                                 </li>
@@ -152,13 +254,16 @@ function SettingApp() {
                         <div className="card-header d-flex align-items-center">
                             <h3 className="card-title m-0">Danh sách mặt in</h3>
                             <button className="btn btn-primary ml-2"
-                                onClick={(e) => setShowForm({ ...showForm, mat_in: true })}
+                                onClick={(e) => {
+                                    setShowForm({ ...showForm, mat_in: true });
+                                    setFormMatIn({ ...formMatIn, id: 0, name: "", percent: 0 });
+                                }}
                             >Thêm</button>
                         </div>
                         <div className="card-body pb-3 pt-3">
                             {
                                 showForm.mat_in &&
-                                <form>
+                                <form onSubmit={(e) => updateOrCreateMatIn(e)} method="POST" role="form">
                                     <div className="mb-3">
                                         <label htmlFor="mat_in_name" className="form-label">Tên mặt in</label>
                                         <input type="text"
@@ -175,7 +280,13 @@ function SettingApp() {
                                     </div>
                                     <button type="submit"
                                         disabled={!formMatIn.name || !formMatIn.percent}
-                                        className="btn btn-success">Lưu mặt in</button>
+                                        className="btn btn-success">{formMatIn.id ? "Cập nhật" : "Lưu"} mặt in</button>
+                                    <button type="reset"
+                                        onClick={() => {
+                                            setFormMatIn({ ...formMatIn, id: 0, name: "", percent: 0 });
+                                            setShowForm({ ...showForm, mat_in: false });
+                                        }}
+                                        className="btn btn-warning ml-2"> Hủy bỏ</button>
                                 </form>
                             }
                             {allMatIn && allMatIn.length > 0 && allMatIn.map(item => {
@@ -185,7 +296,12 @@ function SettingApp() {
                                         <div className="box-info-percent">{item.percent}</div>
                                     </div>
                                     <div className="box-action">
-                                        <button className="btn btn-secondary mr-2">Edit</button>
+                                        <button className="btn btn-secondary mr-2"
+                                            onClick={(e) => {
+                                                setFormMatIn({ ...formMatIn, name: item.name, percent: item.percent, id: item.id });
+                                                setShowForm({ ...showForm, mat_in: true });
+                                            }}
+                                        >Edit</button>
                                         <button className="btn btn-danger">Xóa</button>
                                     </div>
                                 </li>
@@ -198,14 +314,17 @@ function SettingApp() {
                         <div className="card-header d-flex align-items-center">
                             <h3 className="card-title m-0">Danh sách quy cách</h3>
                             <button className="btn btn-primary ml-2"
-                                onClick={(e) => setShowForm({ ...showForm, quy_cach: true })}
+                                onClick={(e) => {
+                                    setShowForm({ ...showForm, quy_cach: true });
+                                    setFormQuyCach({ ...formQuyCach, id: 0, name: "", point: 0 });
+                                }}
                             >Thêm</button>
                         </div>
                         <div className="card-body pb-3 pt-3">
 
                             {
                                 showForm.quy_cach &&
-                                <form>
+                                <form onSubmit={(e) => updateOrCreateQuyCach(e)} method="POST" role="form">
                                     <div className="mb-3">
                                         <label htmlFor="quy_cach_name" className="form-label">Tên quy cách</label>
                                         <input type="text"
@@ -216,13 +335,19 @@ function SettingApp() {
                                     <div className="mb-3">
                                         <label htmlFor="quy_cach_point" className="form-label">Percent</label>
                                         <input type="number"
-                                            value={formQuyCach.percent}
+                                            value={formQuyCach.point}
                                             onChange={(e) => setFormQuyCach({ ...formQuyCach, point: e.target.value })}
                                             className="form-control" id="quy_cach_point" />
                                     </div>
                                     <button type="submit"
                                         disabled={!formQuyCach.name || !formQuyCach.point}
-                                        className="btn btn-success">Lưu quy cách</button>
+                                        className="btn btn-success">{formQuyCach.id ? "Cập nhật" : "Lưu"} quy cách</button>
+                                    <button type="reset"
+                                        onClick={() => {
+                                            setFormQuyCach({ ...formQuyCach, id: 0, name: "", point: 0 });
+                                            setShowForm({ ...showForm, quy_cach: false });
+                                        }}
+                                        className="btn btn-warning ml-2"> Hủy bỏ</button>
                                 </form>
                             }
                             {allQuyCach && allQuyCach.length > 0 && allQuyCach.map(item => {
@@ -232,7 +357,12 @@ function SettingApp() {
                                         <div className="box-info-point">{item.point}</div>
                                     </div>
                                     <div className="box-action">
-                                        <button className="btn btn-secondary mr-2">Edit</button>
+                                        <button className="btn btn-secondary mr-2"
+                                            onClick={(e) => {
+                                                setFormQuyCach({ ...formQuyCach, name: item.name, point: item.point, id: item.id });
+                                                setShowForm({ ...showForm, quy_cach: true });
+                                            }}
+                                        >Edit</button>
                                         <button className="btn btn-danger">Xóa</button>
                                     </div>
                                 </li>
@@ -245,13 +375,16 @@ function SettingApp() {
                         <div className="card-header d-flex align-items-center">
                             <h3 className="card-title m-0">Danh sách số lượng</h3>
                             <button className="btn btn-primary ml-2"
-                                onClick={(e) => setShowForm({ ...showForm, so_luong: true })}
+                                onClick={(e) => {
+                                    setShowForm({ ...showForm, so_luong: true });
+                                    setFormSoLuong({ ...formSoLuong, id: 0, name: "", count: 50 });
+                                }}
                             >Thêm</button>
                         </div>
                         <div className="card-body pb-3 pt-3">
                             {
                                 showForm.so_luong &&
-                                <form>
+                                <form onSubmit={(e) => updateOrCreateSoLuong(e)} method="POST" role="form">
                                     <div className="mb-3">
                                         <label htmlFor="so_luong_name" className="form-label">Tên số lượng</label>
                                         <input type="text"
@@ -268,7 +401,13 @@ function SettingApp() {
                                     </div>
                                     <button type="submit"
                                         disabled={!formSoLuong.name || !formSoLuong.count}
-                                        className="btn btn-success">Lưu số lượng</button>
+                                        className="btn btn-success">{formSoLuong.id ? "Cập nhật" : "Lưu"} số lượng</button>
+                                    <button type="reset"
+                                        onClick={() => {
+                                            setFormSoLuong({ ...formSoLuong, id: 0, name: "", count: 0 });
+                                            setShowForm({ ...showForm, so_luong: false });
+                                        }}
+                                        className="btn btn-warning ml-2"> Hủy bỏ</button>
                                 </form>
                             }
                             {allSoLuong && allSoLuong.length > 0 && allSoLuong.map(item => {
@@ -278,7 +417,13 @@ function SettingApp() {
                                         <div className="box-info-count">{item.count}</div>
                                     </div>
                                     <div className="box-action">
-                                        <button className="btn btn-secondary mr-2">Edit</button>
+                                        <button className="btn btn-secondary mr-2"
+
+                                            onClick={(e) => {
+                                                setFormSoLuong({ ...formSoLuong, name: item.name, count: item.count, id: item.id });
+                                                setShowForm({ ...showForm, so_luong: true });
+                                            }}
+                                        >Edit</button>
                                         <button className="btn btn-danger">Xóa</button>
                                     </div>
                                 </li>
@@ -291,13 +436,16 @@ function SettingApp() {
                         <div className="card-header d-flex align-items-center">
                             <h3 className="card-title m-0">Danh sách thời gian</h3>
                             <button className="btn btn-primary ml-2"
-                                onClick={(e) => setShowForm({ ...showForm, thoi_gian: true })}
+                                onClick={(e) => {
+                                    setShowForm({ ...showForm, thoi_gian: true });
+                                    setFormThoiGian({ ...formThoiGian, name: "", id: 0, percent: 100 });
+                                }}
                             >Thêm</button>
                         </div>
                         <div className="card-body pb-3 pt-3">
                             {
                                 showForm.thoi_gian &&
-                                <form>
+                                <form onSubmit={(e) => updateOrCreateThoiGian(e)} method="POST" role="form">
                                     <div className="mb-3">
                                         <label htmlFor="thoi_gian_name" className="form-label">Tên thời gian</label>
                                         <input type="text"
@@ -314,7 +462,13 @@ function SettingApp() {
                                     </div>
                                     <button type="submit"
                                         disabled={!formThoiGian.name || !formThoiGian.percent}
-                                        className="btn btn-success">Lưu thời gian</button>
+                                        className="btn btn-success">{formThoiGian.id ? "Cập nhật" : "Lưu "} thời gian</button>
+                                    <button type="reset"
+                                        onClick={() => {
+                                            setFormThoiGian({ ...formThoiGian, id: 0, name: "", percent: 100 });
+                                            setShowForm({ ...showForm, thoi_gian: false });
+                                        }}
+                                        className="btn btn-warning ml-2"> Hủy bỏ</button>
                                 </form>
                             }
                             {allThoiGian && allThoiGian.length > 0 && allThoiGian.map(item => {
@@ -324,7 +478,12 @@ function SettingApp() {
                                         <div className="box-info-percent">{item.percent}</div>
                                     </div>
                                     <div className="box-action">
-                                        <button className="btn btn-secondary mr-2">Edit</button>
+                                        <button className="btn btn-secondary mr-2"
+                                            onClick={(e) => {
+                                                setFormThoiGian({ ...formThoiGian, name: item.name, percent: item.percent, id: item.id });
+                                                setShowForm({ ...showForm, thoi_gian: true });
+                                            }}
+                                        >Edit</button>
                                         <button className="btn btn-danger">Xóa</button>
                                     </div>
                                 </li>
