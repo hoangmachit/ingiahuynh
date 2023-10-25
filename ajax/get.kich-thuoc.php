@@ -9,7 +9,9 @@ if (!$productID) {
     echo json_encode($data);
     die;
 }
-$listKichThuoc = $d->rawQuery("select * from #_product_kich_thuocs where product_id=?", array($productID));
+$listKichThuoc = $d->rawQuery("SELECT kt.id AS id, kt.length AS length, kt.width AS width
+FROM table_product_kich_thuocs AS kt
+WHERE kt.product_id = ?", array($productID));
 $data = [
     "success" => true,
     "message" => "Get success",

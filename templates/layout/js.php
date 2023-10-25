@@ -162,14 +162,14 @@ function GoogleLanguageTranslatorInit(){new google.translate.TranslateElement({p
             await setListChatLieu(result.listChatLieu);
             await setChatLieuChoice(result.chatLieuChoice);
             const fullData = await getFullDataChoice(result.chatLieuChoice);
-            console.log(">>>fullData",fullData);
+            await setRelashion(fullData.result);
         }
         const changeChatLieuChoice= async(e) =>{
             const value = e.target.value;
-            console.log("changeChatLieuChoice",value);
             const itemChoice = listChatLieu.find(item=>item.id===value);
             await setChatLieuChoice(itemChoice);
             const fullData =await getFullDataChoice(itemChoice);
+            await setRelashion(fullData.result);
         }
         return (
             <div>
@@ -192,6 +192,7 @@ function GoogleLanguageTranslatorInit(){new google.translate.TranslateElement({p
                             {
                                 firstKichThuoc &&
                                 <div>
+                                {listChatLieu && listChatLieu.length > 0 &&
                                     <div className="pro-detail-group">
                                         <label htmlFor="pro-detail-chatlieu">- Chất liệu giấy</label>
                                         <select
@@ -199,41 +200,67 @@ function GoogleLanguageTranslatorInit(){new google.translate.TranslateElement({p
                                         onChange={(e)=>changeChatLieuChoice(e)}
                                         name="pro-detail-chatlieu" className="form-pro-detail">
                                             <option value=""> - Chọn Chất liệu giấy</option>
-                                            { listChatLieu && listChatLieu.length > 0 && listChatLieu.map(item=>{
-                                                return <option value={item.id}>{item.name}</option>
+                                            { listChatLieu.map(item=>{
+                                                return <option value={item.id}>{item.chat_lieu_name}</option>
                                             }) }
                                         </select>
                                     </div>
+                                }
+                                {relashion.listMatIn && relashion.listMatIn.length > 0 &&
                                     <div className="pro-detail-group">
                                         <label htmlFor="pro-detail-somat">- Số mặt in</label>
                                         <select name="pro-detail-somat" className="form-pro-detail">
                                             <option value=""> - Chọn Số mặt in</option>
+                                            { relashion.listMatIn.map(item=>{
+                                                return <option value={item.id1}>{item.name}</option>
+                                            })  }
                                         </select>
                                     </div>
+                                }
+                                {relashion.listCanMang && relashion.listCanMang.length > 0 &&
                                     <div className="pro-detail-group">
                                         <label htmlFor="pro-detail-canmang">- Loại cán màng</label>
                                         <select name="pro-detail-canmang" className="form-pro-detail">
                                             <option value=""> - Chọn Loại cán màng</option>
+                                            {  relashion.listCanMang.map(item=>{
+                                                return <option value={item.id1}>{item.name}</option>
+                                            })  }
                                         </select>
                                     </div>
+                                }
+                                {relashion.listQuyCach && relashion.listQuyCach.length > 0 &&
                                     <div className="pro-detail-group">
                                         <label htmlFor="pro-detail-soduongcung">- Qui cách</label>
                                         <select name="pro-detail-soduongcung" className="form-pro-detail">
                                             <option value=""> - Chọn Qui cách</option>
+                                            {  relashion.listQuyCach.map(item=>{
+                                                return <option value={item.id1}>{item.name}</option>
+                                            })  }
                                         </select>
                                     </div>
+                                }
+                                {relashion.listSoLuong && relashion.listSoLuong.length > 0 &&
                                     <div className="pro-detail-group">
                                         <label htmlFor="pro-detail-soluong">- Số lượng</label>
                                         <select name="pro-detail-soluong" className="form-pro-detail">
                                             <option value=""> - Chọn Số lượng</option>
+                                            {  relashion.listSoLuong.map(item=>{
+                                                return <option value={item.id1}>{item.name}</option>
+                                            })  }
                                         </select>
                                     </div>
+                                }
+                                { relashion.listThoiGian && relashion.listThoiGian.length > 0 &&
                                     <div className="pro-detail-group">
                                         <label htmlFor="pro-detail-hinhdang">- Thời gian</label>
                                         <select name="pro-detail-hinhdang" className="form-pro-detail">
                                             <option value=""> - Chọn Thời gian</option>
+                                            {  relashion.listThoiGian.map(item=>{
+                                                return <option value={item.id1}>{item.name}</option>
+                                            })  }
                                         </select>
                                     </div>
+                                }
                             </div>
                             }
                         </div>
