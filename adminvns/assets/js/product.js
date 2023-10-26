@@ -16,6 +16,7 @@ function OptionsApp() {
     const [sidebar, setSidebar] = useState(false);
     const [allChatLieu, setAllChatLieu] = useState([]);
     const [detail, setDetail] = useState({});
+    const [loading, setLoading] = useState(false);
     /** form Add */
     const formDefault = {
         length: 0,
@@ -53,7 +54,6 @@ function OptionsApp() {
         await fetch(`${API}/get-kich-thuoc.php?productID=${PRODUCT_ID}`)
             .then(async (response) => await response.json())
             .then(async (response) => {
-                console.log(response)
                 const { success, alls } = response;
                 setAllKichThuoc(alls);
             })
@@ -103,6 +103,26 @@ function OptionsApp() {
                 setAllChatLieu(res.allChatLieu);
             }).finally(() => {
                 setSidebar(true);
+            });
+    }
+    const handleDeleteOption = async (e, item) => {
+        e.preventDefault();
+        setLoading(true);
+        await fetch(`${API}/delete-option.php`, {
+            method: "POST",
+            body: JSON.stringify({ ktcl_id: item.id })
+        }).then(response => response.json())
+            .then((res) => {
+                const { success, message } = res;
+                if (success) {
+                    const newChatLieu = allChatLieu.filter(ls => ls.id !== item.id);
+                    setAllChatLieu(newChatLieu);
+                }
+                showToast(message, success);
+            }).finally(() => {
+                setTimeout(() => {
+                    setLoading(false);
+                }, 500);
             });
     }
     return (
@@ -446,7 +466,7 @@ function OptionsApp() {
                 <div className="sidebar-body">
                     <ul className="m-0 p-0 list-style-none"
                         style={{
-                            listStyle:"none"
+                            listStyle: "none"
                         }}
                     >
                         {allChatLieu && allChatLieu.length > 0 && allChatLieu.map(item => {
@@ -472,57 +492,84 @@ function OptionsApp() {
                                             </div>
                                         </fieldset>
                                         <fieldset class="col-md-4 mb-2">
-                                            <legend class="col-form-label pt-0"><b>Số mặt in</b></legend>
-                                            <div>
-                                                {listMatIn && listMatIn.length > 0 && listMatIn.map(item => {
-                                                    return <span key={item.id} className="badge bg-success mr-2">{item.name}</span>
-                                                })}
-                                            </div>
-                                        </fieldset>
-                                        <fieldset class="col-md-4 mb-2">
-                                            <legend class="col-form-label pt-0"><b>Loại cán màng</b></legend>
-                                            <div>
-                                                {listCanMang && listCanMang.length > 0 && listCanMang.map(item => {
-                                                    return <span key={item.id} className="badge bg-success mr-2">{item.name}</span>
-                                                })}
-                                            </div>
-                                        </fieldset>
-                                        <fieldset class="col-md-4 mb-2">
                                             <legend class="col-form-label pt-0"><b>Khổ decal in</b></legend>
                                             <div>
                                                 {khoIn.left}x{khoIn.right}
                                             </div>
                                         </fieldset>
-                                        <fieldset class="col-md-4 mb-2">
-                                            <legend class="col-form-label pt-0"><b>Quy cách</b></legend>
-                                            <div>
-                                                {listQuyCach && listQuyCach.length > 0 && listQuyCach.map(item => {
-                                                    return <span key={item.id} className="badge bg-success mr-2">{item.name}</span>
-                                                })}
-                                            </div>
-                                        </fieldset>
-                                        <fieldset class="col-md-4 mb-2">
-                                            <legend class="col-form-label pt-0"><b>Số lượng</b></legend>
-                                            <div>
-                                                {listSoLuong && listSoLuong.length > 0 && listSoLuong.map(item => {
-                                                    return <span key={item.id} className="badge bg-success mr-2">{item.count}</span>
-                                                })}
-                                            </div>
-                                        </fieldset>
-                                        <fieldset class="col-md-4 mb-2">
-                                            <legend class="col-form-label pt-0"><b>Thời gian</b></legend>
-                                            <div>
-                                                {listThoiGian && listThoiGian.length > 0 && listThoiGian.map(item => {
-                                                    return <span key={item.id} className="badge bg-success mr-2">{item.name}</span>
-                                                })}
-                                            </div>
-                                        </fieldset>
-                                    </div>
+                                        {
+                                            listMatIn && listMatIn.length > 0 &&
+                                            <fieldset class="col-md-4 mb-2">
+                                                <legend class="col-form-label pt-0"><b>Số mặt in</b></legend>
+                                                <div>
+                                                    {listMatIn.map(item => {
+                                                        return <span key={item.id} className="badge bg-success mr-2">{item.name}</span>
+                                                    })}
+                                                </div>
+                                            </fieldset>
+                                        }
+                                        {
+                                            listCanMang && listCanMang.length > 0 &&
+                                            <fieldset class="col-md-4 mb-2">
+                                                <legend class="col-form-label pt-0"><b>Loại cán màng</b></legend>
+                                                <div>
+                                                    {listCanMang.map(item => {
+                                                        return <span key={item.id} className="badge bg-success mr-2">{item.name}</span>
+                                                    })}
+                                                </div>
+                                            </fieldset>
+                                        }
 
+                                        {
+                                            listQuyCach && listQuyCach.length > 0 &&
+                                            <fieldset class="col-md-4 mb-2">
+                                                <legend class="col-form-label pt-0"><b>Quy cách</b></legend>
+                                                <div>
+                                                    {listQuyCach.map(item => {
+                                                        return <span key={item.id} className="badge bg-success mr-2">{item.name}</span>
+                                                    })}
+                                                </div>
+                                            </fieldset>
+                                        }
+                                        {
+                                            listSoLuong && listSoLuong.length > 0 &&
+                                            <fieldset class="col-md-4 mb-2">
+                                                <legend class="col-form-label pt-0"><b>Số lượng</b></legend>
+                                                <div>
+                                                    {listSoLuong.map(item => {
+                                                        return <span key={item.id} className="badge bg-success mr-2">{item.count}</span>
+                                                    })}
+                                                </div>
+                                            </fieldset>
+                                        }
+                                        {
+                                            listThoiGian && listThoiGian.length > 0 &&
+                                            <fieldset class="col-md-4 mb-2">
+                                                <legend class="col-form-label pt-0"><b>Thời gian</b></legend>
+                                                <div>
+                                                    {listThoiGian.map(item => {
+                                                        return <span key={item.id} className="badge bg-success mr-2">{item.name}</span>
+                                                    })}
+                                                </div>
+                                            </fieldset>
+                                        }
+                                    </div>
+                                    <div className="mt-3 d-flex justify-content-end align-items-center mb-3">
+                                        <button
+                                            className="btn btn-danger"
+                                            type="button"
+                                            onClick={(e) => handleDeleteOption(e, item)}
+                                        > Xóa</button>
+                                    </div>
                                 </li>
                             )
                         })}
                     </ul>
+                    {
+                        loading && <div className="mainLoading">
+                            <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                        </div>
+                    }
                 </div>
                 <div className="sidebar-overload"></div>
             </div>

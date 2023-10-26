@@ -49,7 +49,7 @@ $idsQuyCach = $data['idsQuyCach'];
 if (!empty($idsQuyCach)) {
     foreach ($idsQuyCach as $key => $item) {
         $d->insert('product_kich_thuoc_chat_lieu_quy_cachs', [
-            'ktct_id' => $kichThuocChatLieuId,
+            'ktcl_id' => $kichThuocChatLieuId,
             'qc_id' => $item,
         ]);
     }
