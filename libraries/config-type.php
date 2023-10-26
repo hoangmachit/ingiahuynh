@@ -1,22 +1,4 @@
 <?php
-/* Config type - Group */
-    // $config['group'] = array(
-    //     "Group Sản Phẩm" => array(
-    //         "product" => array("san-pham"),
-    //         // "tags" => array("san-pham"),
-    //         // "static" => array("gioi-thieu-san-pham"),
-    //         // "photo" => array("slide-product"),
-    //         // "photo_static" => array("watermark"),
-    //         // "newsletter" => array("dangkybaogia")
-    //     ),
-    //     "Group Tin Tức" => array(
-    //         "news" => array("tin-tuc"),
-    //         // "tags" => array("tin-tuc"),
-    //         // "photo_static" => array("watermark-news"),
-    //         // "newsletter" => array("dangkytuyendung")
-    //     )
-    // );
-
 /* Config type - Product */
 require_once LIBRARIES.'type/config-type-product.php';
 

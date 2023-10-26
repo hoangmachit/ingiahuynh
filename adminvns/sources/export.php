@@ -59,14 +59,18 @@ function exportExcel()
 			"motavi" => "Mô tả",
 			"motangan2vi" => "Mô tả dưới thành tiền",
 			"noidungvi" => "Nội dung",
+			"titlevi" => "Seo title",
+			"keywordsvi" => "Seo keyword",
+			"descriptionvi" => "Seo descriptions",
+			"hienthi" => "Hiển thị",
 		);
 		$i = 0;
 		foreach ($array_file as $k => $v) {
 			if ($k == 'masp') {
 				$PHPExcel->getActiveSheet()->getColumnDimension($alphas[$i])->setWidth(15);
-			} else if (in_array($k, ['tenvi', 'tenkhongdauvi'])) {
+			} else if (in_array($k, ['tenvi', 'tenkhongdauvi', 'titlevi', 'keywordsvi'])) {
 				$PHPExcel->getActiveSheet()->getColumnDimension($alphas[$i])->setWidth(25);
-			} else if (in_array($k, ['motavi', 'motanganvi', 'motangan2vi'])) {
+			} else if (in_array($k, ['motavi', 'motanganvi', 'motangan2vi','descriptionvi'])) {
 				$PHPExcel->getActiveSheet()->getColumnDimension($alphas[$i])->setWidth(50);
 			} else if ($k == 'noidungvi') {
 				$PHPExcel->getActiveSheet()->getColumnDimension($alphas[$i])->setWidth(150);
@@ -78,11 +82,12 @@ function exportExcel()
 			$i++;
 		}
 
-		$products = $d->rawQuery("select id, stt, tenvi, masp, gia,id_list,tenkhongdauvi,id_cat,id_item, donvi, photo, motanganvi, motavi, motangan2vi, noidungvi from #_product where type = ? order by stt,id desc", array($type));
+		$products = $d->rawQuery("select id, stt, tenvi, masp, gia,id_list,tenkhongdauvi,id_cat,id_item, donvi, photo, motanganvi, motavi, motangan2vi, noidungvi, hienthi from #_product where type = ? order by stt,id desc", array($type));
 		$vitri = 2;
 
 		for ($i = 0; $i < count($products); $i++) {
 			$j = 0;
+			$productId = $products[$i]['id'];
 			foreach ($array_file as $k => $v) {
 				if ($k == 'id_list') {
 					$rowList = $d->rawQueryOne("select tenvi from #_product_list where id=?", array($products[$i][$k]));
@@ -93,7 +98,11 @@ function exportExcel()
 				} else if ($k == 'id_item') {
 					$rowItem = $d->rawQueryOne("select tenvi from #_product_item where id=?", array($products[$i][$k]));
 					$datacell = $rowItem['tenvi'];
-				} else {
+				}else if (in_array($k,['titlevi','keywordsvi','descriptionvi'])) {
+					$seo = $d->rawQueryOne("select titlevi, keywordsvi, descriptionvi from #_seo where idmuc=?", array($productId));
+					$datacell = $seo[$k];
+				}
+				 else {
 					$datacell = $products[$i][$k];
 				}
 				$PHPExcel->setActiveSheetIndex(0)->setCellValue($alphas[$j] . $vitri, htmlspecialchars_decode($datacell));
