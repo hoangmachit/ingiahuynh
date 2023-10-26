@@ -418,31 +418,28 @@ function uploadExcelOptions()
                     $cell = $worksheet->getCellByColumnAndRow(0, ($row - 1));
                     $productIDOld = $cell->getValue();
 
-                    $cell = $worksheet->getCellByColumnAndRow(1, $row);
-                    $productName = $cell->getValue();
-
-                    $cell = $worksheet->getCellByColumnAndRow(2, $row);
-                    $productSlug = $cell->getValue();
-
                     /* Lấy sản phẩm theo id */
-                    if(!$productID == $productIDOld){
+                    if($row==2){
                         $productImport = $d->rawQueryOne("select id from #_product where id = ? limit 0,1", array($productID));
+                    }else{
+                        if(!$productID != $productIDOld){
+                            $productImport = $d->rawQueryOne("select id from #_product where id = ? limit 0,1", array($productID));
+                        }
                     }
                     if ($productImport) {
                         // get data kích thước
                         $cell = $worksheet->getCellByColumnAndRow(3, $row);
                         $stringKichThuoc = $cell->getValue();
-                        $arrayKichThuoc = explode("~", str_replace(" ", "", $stringKichThuoc));
+                        $arrayKichThuoc = explode("x", str_replace(" ", "", $stringKichThuoc));
                         $arrayKichThuoc[] = $productID;
                         $detailKichThuoc = $d->rawQueryOne("select id from #_product_kich_thuocs where length=? and width=? and product_id=?", $arrayKichThuoc);
-
                         $ktLength = $arrayKichThuoc[0] ? (int) $arrayKichThuoc[0] : 0;
                         $ktWidth = $arrayKichThuoc[1] ? (int) $arrayKichThuoc[1] : 0;
                         if (!$detailKichThuoc && $ktLength && $ktWidth) {
                             $ktID = $d->insert('product_kich_thuocs', [
-                                'length' => $ktLength,
-                                'width' => $ktWidth,
-                                'product_id' => $productID,
+                                'length' => (int)$ktLength,
+                                'width' => (int)$ktWidth,
+                                'product_id' => (int)$productID,
                                 'created_at' => $now,
                                 'updated_at' => $now,
                             ]);
@@ -520,6 +517,8 @@ function uploadExcelOptions()
                                         $d->insert('product_kich_thuoc_chat_lieu_can_mangs', [
                                             'ktcl_id' => $dtKtID,
                                             'cm_id' => $detail['id'],
+                                            'created_at' => $now,
+                                            'updated_at' => $now,
                                         ]);
                                     }
                                 }
@@ -530,7 +529,9 @@ function uploadExcelOptions()
                                     if ($detail) {
                                         $d->insert('product_kich_thuoc_chat_lieu_quy_cachs', [
                                             'ktcl_id' => $dtKtID,
-                                            'cm_id' => $detail['id'],
+                                            'qc_id' => $detail['id'],
+                                            'created_at' => $now,
+                                            'updated_at' => $now,
                                         ]);
                                     }
                                 }
@@ -541,7 +542,9 @@ function uploadExcelOptions()
                                     if ($detail) {
                                         $d->insert('product_kich_thuoc_chat_lieu_mat_ins', [
                                             'ktcl_id' => $dtKtID,
-                                            'cm_id' => $detail['id'],
+                                            'mi_id' => $detail['id'],
+                                            'created_at' => $now,
+                                            'updated_at' => $now,
                                         ]);
                                     }
                                 }

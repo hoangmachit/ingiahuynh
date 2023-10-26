@@ -17,6 +17,8 @@ function OptionsApp() {
     const [allChatLieu, setAllChatLieu] = useState([]);
     const [detail, setDetail] = useState({});
     const [loading, setLoading] = useState(false);
+    const [deleted, setDeleted] = useState(false);
+    const [ktDeleted, setKtDeleted] = useState(0);
     /** form Add */
     const formDefault = {
         length: 0,
@@ -125,6 +127,32 @@ function OptionsApp() {
                 }, 500);
             });
     }
+    const openDeleted = (e, item) => {
+        e.preventDefault();
+        setDeleted(true);
+        setKtDeleted(item.id);
+    }
+    const deleteKichThuoc = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        await fetch(`${API}/delete-kich-thuoc.php`, {
+            method: "POST",
+            body: JSON.stringify({ ktDeleted })
+        }).then(response => response.json())
+            .then((res) => {
+                const { success, message } = res;
+                if (success) {
+                    const newAllKichThuoc = allKichThuoc.filter(ls => ls.id !== ktDeleted);
+                    setAllKichThuoc(newAllKichThuoc);
+                }
+                showToast(message, success);
+            }).finally(() => {
+                setTimeout(() => {
+                    setLoading(false);
+                    setDeleted(false);
+                }, 300);
+            });
+    }
     return (
         <div>
             <div className="card card-primary card-outline text-sm mb-0">
@@ -144,17 +172,17 @@ function OptionsApp() {
                         <li className="d-flex justify-content-between align-items-center mb-3 border-bottom pb-1 pt-1">
                             <div className="box-info d-flex align-items-center">
                                 <div className="box-info-id mr-2">
-                                    <span>ID</span>
+                                    <span><b>ID</b></span>
                                 </div>
                                 <div className="box-info-length-width mr-2">
-                                    <span>Kích thước</span>
+                                    <span><b>Kích thước</b></span>
                                 </div>
                                 <div className="box-info-length-width">
-                                    <span>Tổng options</span>
+                                    <span><b>Tổng options</b></span>
                                 </div>
                             </div>
                             <div className="box-action">
-                                <span>Thao tác</span>
+                                <span><b>Thao tác</b></span>
                             </div>
                         </li>
                         {allKichThuoc && allKichThuoc.length > 0 && allKichThuoc.map(item => {
@@ -183,13 +211,13 @@ function OptionsApp() {
                                                     lineHeight: 1,
                                                 }}
                                                 className="svg">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-circle" viewBox="0 0 16 16">
                                                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
                                                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
                                                 </svg>
                                             </span>
                                         </button>
-                                        <button className="btn btn-secondary ml-2"
+                                        <button className="btn btn-secondary ml-2 mr-2"
                                             onClick={(e) => handleShowOption(e, item)}
                                             type="button">
                                             <span
@@ -197,9 +225,23 @@ function OptionsApp() {
                                                     lineHeight: 1,
                                                 }}
                                                 className="svg">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-eye" viewBox="0 0 16 16">
                                                     <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
                                                     <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
+                                                </svg>
+                                            </span>
+                                        </button>
+                                        <button className="btn btn-danger"
+                                            type="button"
+                                            onClick={(e) => openDeleted(e, item)}
+                                        >
+                                            <span
+                                                style={{
+                                                    lineHeight: 1,
+                                                }}
+                                                className="svg">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash3" viewBox="0 0 16 16">
+                                                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z" />
                                                 </svg>
                                             </span>
                                         </button>
@@ -255,6 +297,30 @@ function OptionsApp() {
                     <div className="modal-backdrop fade show"></div>
                 </div>
             )}
+            {deleted &&
+                <div>
+                    <div className="modal fade show" id="exampleModal" tabindex="-1" style={{
+                        display: "block"
+                    }} >
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                                <div className="modal-body">
+                                    <h5 className="m-0 h5">Bạn chắc chắn muốn xóa chứ?</h5>
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal"
+                                        onClick={(e) => setDeleted(false)}
+                                    >Hủy bỏ</button>
+                                    <button type="button" className="btn btn-primary"
+                                        onClick={(e) => deleteKichThuoc(e)}
+                                    >Đồng ý</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="modal-backdrop fade show"></div>
+                </div>
+            }
             {modal && detail && (
                 <div>
                     <div className="modal fade show" id="exampleModalFullscreen" tabindex="-1" aria-labelledby="exampleModalFullscreenLabel" style={{
@@ -509,22 +575,22 @@ function OptionsApp() {
                                         <div>Giá ng NL: <b>{item.price_nl}</b><dup>đ</dup></div>
                                     </div>
                                     <div className="row">
-                                        <fieldset class="col-md-4 mb-2">
-                                            <legend class="col-form-label pt-0"><b>Chất Liệu</b></legend>
+                                        <fieldset className="col-md-4 mb-2">
+                                            <legend className="col-form-label pt-0"><b>Chất Liệu</b></legend>
                                             <div>
                                                 <span className="badge bg-danger">{chatLieu.name}</span>
                                             </div>
                                         </fieldset>
-                                        <fieldset class="col-md-4 mb-2">
-                                            <legend class="col-form-label pt-0"><b>Khổ decal in</b></legend>
+                                        <fieldset className="col-md-4 mb-2">
+                                            <legend className="col-form-label pt-0"><b>Khổ decal in</b></legend>
                                             <div>
                                                 {khoIn.left}x{khoIn.right}
                                             </div>
                                         </fieldset>
                                         {
                                             listMatIn && listMatIn.length > 0 &&
-                                            <fieldset class="col-md-4 mb-2">
-                                                <legend class="col-form-label pt-0"><b>Số mặt in</b></legend>
+                                            <fieldset className="col-md-4 mb-2">
+                                                <legend className="col-form-label pt-0"><b>Số mặt in</b></legend>
                                                 <div>
                                                     {listMatIn.map(item => {
                                                         return <span key={item.id} className="badge bg-success mr-2">{item.name}</span>
@@ -534,8 +600,8 @@ function OptionsApp() {
                                         }
                                         {
                                             listCanMang && listCanMang.length > 0 &&
-                                            <fieldset class="col-md-4 mb-2">
-                                                <legend class="col-form-label pt-0"><b>Loại cán màng</b></legend>
+                                            <fieldset className="col-md-4 mb-2">
+                                                <legend className="col-form-label pt-0"><b>Loại cán màng</b></legend>
                                                 <div>
                                                     {listCanMang.map(item => {
                                                         return <span key={item.id} className="badge bg-success mr-2">{item.name}</span>
@@ -546,8 +612,8 @@ function OptionsApp() {
 
                                         {
                                             listQuyCach && listQuyCach.length > 0 &&
-                                            <fieldset class="col-md-4 mb-2">
-                                                <legend class="col-form-label pt-0"><b>Quy cách</b></legend>
+                                            <fieldset className="col-md-4 mb-2">
+                                                <legend className="col-form-label pt-0"><b>Quy cách</b></legend>
                                                 <div>
                                                     {listQuyCach.map(item => {
                                                         return <span key={item.id} className="badge bg-success mr-2">{item.name}</span>
@@ -557,8 +623,8 @@ function OptionsApp() {
                                         }
                                         {
                                             listSoLuong && listSoLuong.length > 0 &&
-                                            <fieldset class="col-md-4 mb-2">
-                                                <legend class="col-form-label pt-0"><b>Số lượng</b></legend>
+                                            <fieldset className="col-md-4 mb-2">
+                                                <legend className="col-form-label pt-0"><b>Số lượng</b></legend>
                                                 <div>
                                                     {listSoLuong.map(item => {
                                                         return <span key={item.id} className="badge bg-success mr-2">{item.count}</span>
@@ -568,8 +634,8 @@ function OptionsApp() {
                                         }
                                         {
                                             listThoiGian && listThoiGian.length > 0 &&
-                                            <fieldset class="col-md-4 mb-2">
-                                                <legend class="col-form-label pt-0"><b>Thời gian</b></legend>
+                                            <fieldset className="col-md-4 mb-2">
+                                                <legend className="col-form-label pt-0"><b>Thời gian</b></legend>
                                                 <div>
                                                     {listThoiGian.map(item => {
                                                         return <span key={item.id} className="badge bg-success mr-2">{item.name}</span>

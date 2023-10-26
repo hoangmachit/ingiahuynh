@@ -21,10 +21,10 @@ $config = array(
 		'email' => 'tanphat.vinasoftware@gmail.com',
 		'timefinish' => '09/2022'
 	),
-	'arrayDomainSSL' => array('ingiahuynh.dev'),
+	'arrayDomainSSL' => array(''),
 	'database' => array(
 		'server-name' => $_SERVER["SERVER_NAME"],
-		'url' => '/',
+		'url' => '/ingiahuynh/',
 		'type' => 'mysql',
 		'host' => 'localhost',
 		'username' => 'root',
@@ -51,16 +51,13 @@ $config = array(
 		),
 		'lang' => array(
 			'vi' => 'Tiếng Việt',
-			// 'en'=>'Tiếng Anh'
 		),
 		'lang-doc' => 'vi|en',
 		'slug' => array(
 			'vi' => 'Tiếng Việt',
-			// 'en'=>'Tiếng Anh'
 		),
 		'seo' => array(
 			'vi' => 'Tiếng Việt',
-			// 'en'=>'Tiếng Anh'
 		),
 		'comlang' => array(
 			"gioi-thieu" => array("vi" => "gioi-thieu"),

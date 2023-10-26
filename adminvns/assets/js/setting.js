@@ -10,6 +10,7 @@ function SettingApp() {
             .showToast()
     }
     const [allChatLieu, setAllChatLieu] = useState([]);
+    const [allCanMang, setAllCanMang] = useState([]);
     const [allKhoIn, setAllKhoIn] = useState([]);
     const [allMatIn, setAllMatIn] = useState([]);
     const [allQuyCach, setAllQuyCach] = useState([]);
@@ -28,6 +29,7 @@ function SettingApp() {
                 setAllQuyCach(result.allQuyCach);
                 setAllSoLuong(result.allSoLuong);
                 setAllThoiGian(result.allThoiGian);
+                setAllCanMang(result.allCanMang);
             })
     }
     useEffect(() => {
@@ -62,6 +64,11 @@ function SettingApp() {
         name: "",
         percent: 100
     });
+    const [formCanMang, setFormCanMang] = useState({
+        id: 0,
+        name: "",
+        percent: 300
+    });
     const [showForm, setShowForm] = useState({
         chat_lieu: false,
         kho_in: false,
@@ -69,6 +76,7 @@ function SettingApp() {
         quy_cach: false,
         so_luong: false,
         thoi_gian: false,
+        can_mang: false
     });
 
     // handle save and update form
@@ -156,6 +164,20 @@ function SettingApp() {
                 await showToast(message, success);
             })
     }
+    const updateOrCreateCanMang = async (e) => {
+        e.preventDefault();
+        await fetch(`${API}/save-setting-can-mang.php`, {
+            method: "POST",
+            body: JSON.stringify(formCanMang)
+        })
+            .then(response => response.json())
+            .then(async (res) => {
+                const { message, success } = res;
+                setFormCanMang({ id: 0, name: "", percent: 0 });
+                await getAllData();
+                await showToast(message, success);
+            })
+    }
     // delete items
     const deleteItem = async (e, item, table) => {
         e.preventDefault();
@@ -211,10 +233,24 @@ function SettingApp() {
                                         className="btn btn-warning ml-2"> Hủy bỏ</button>
                                 </form>
                             }
+                            <li className="d-flex justify-content-between align-items-center border-bottom pb-2 pt-2">
+                                <div className="box-info d-flex align-items-center">
+                                    <div className="box-info-id mr-2"><b>ID</b></div>
+                                    <div className="box-info-name"><b>Tên</b></div>
+                                </div>
+                                <div className="box-action">
+                                    <span><b>Thao tác</b></span>
+                                </div>
+                            </li>
                             {allChatLieu && allChatLieu.length > 0 && allChatLieu.map(item => {
                                 return <li key={item.id} className="d-flex justify-content-between align-items-center border-bottom pb-2 pt-2">
-                                    <div className="box-info">
-                                        <span>{item.name}</span>
+                                    <div className="box-info d-flex align-items-center">
+                                        <div className="box-id">
+                                            <span>{item.id}</span>
+                                        </div>
+                                        <div className="box-info">
+                                            <span>{item.name}</span>
+                                        </div>
                                     </div>
                                     <div className="box-action">
                                         <button className="btn btn-secondary mr-2"
@@ -274,10 +310,24 @@ function SettingApp() {
                                         className="btn btn-warning ml-2"> Hủy bỏ</button>
                                 </form>
                             }
+                            <li className="d-flex justify-content-between align-items-center border-bottom pb-2 pt-2">
+                                <div className="box-info d-flex align-items-center">
+                                    <div className="box-info-id mr-2"><b>ID</b></div>
+                                    <div className="box-info-name"><b>Tên</b></div>
+                                </div>
+                                <div className="box-action">
+                                    <span><b>Thao tác</b></span>
+                                </div>
+                            </li>
                             {allKhoIn && allKhoIn.length > 0 && allKhoIn.map(item => {
                                 return <li key={item.id} className="d-flex justify-content-between align-items-center border-bottom pb-2 pt-2">
-                                    <div className="box-info">
-                                        <span>{item.left}x{item.right}</span>
+                                    <div className="box-info d-flex align-items-center">
+                                        <div className="box-id mr-2">
+                                            <span>{item.id}</span>
+                                        </div>
+                                        <div className="box-info">
+                                            <span>{item.left}x{item.right}</span>
+                                        </div>
                                     </div>
                                     <div className="box-action">
                                         <button className="btn btn-secondary mr-2"
@@ -337,10 +387,21 @@ function SettingApp() {
                                         className="btn btn-warning ml-2"> Hủy bỏ</button>
                                 </form>
                             }
+                            <li className="d-flex justify-content-between align-items-center border-bottom pb-2 pt-2">
+                                <div className="box-info d-flex align-items-center">
+                                    <div className="box-info-id mr-2"><b>ID</b></div>
+                                    <div className="box-info-name mr-2"><b>Tên</b></div>
+                                    <div className="box-info-percent"><b>Percent</b></div>
+                                </div>
+                                <div className="box-action">
+                                    <span><b>Thao tác</b></span>
+                                </div>
+                            </li>
                             {allMatIn && allMatIn.length > 0 && allMatIn.map(item => {
                                 return <li key={item.id} className="d-flex justify-content-between align-items-center border-bottom pb-2 pt-2">
                                     <div className="box-info d-flex align-items-center">
-                                        <div className="box-info-name">{item.name}</div>
+                                        <div className="box-info-id mr-2">{item.id}</div>
+                                        <div className="box-info-name mr-2">{item.name}</div>
                                         <div className="box-info-percent">{item.percent}</div>
                                     </div>
                                     <div className="box-action">
@@ -352,6 +413,82 @@ function SettingApp() {
                                         >Edit</button>
                                         <button className="btn btn-danger"
                                             onClick={(e) => deleteItem(e, item, 'product_mat_ins')}
+                                        >Xóa</button>
+                                    </div>
+                                </li>
+                            })}
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-6 mb-4">
+                    <div className="card card-primary card-outline text-sm mb-0">
+                        <div className="card-header d-flex align-items-center">
+                            <h3 className="card-title m-0">Danh sách cán màng</h3>
+                            {!showForm.can_mang &&
+                                <button className="btn btn-primary ml-2"
+                                    onClick={(e) => {
+                                        setShowForm({ ...showForm, can_mang: true });
+                                        setFormCanMang({ ...formCanMang, id: 0, name: "", percent: 300 });
+                                    }}
+                                >Thêm</button>
+                            }
+                        </div>
+                        <div className="card-body pb-3 pt-3">
+
+                            {
+                                showForm.can_mang &&
+                                <form onSubmit={(e) => updateOrCreateCanMang(e)} method="POST" role="form">
+                                    <div className="mb-3">
+                                        <label htmlFor="can_mang_name" className="form-label">Tên cán màng</label>
+                                        <input type="text"
+                                            value={formCanMang.name}
+                                            onChange={(e) => setFormCanMang({ ...formCanMang, name: e.target.value })}
+                                            className="form-control" id="can_mang_name" />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label htmlFor="can_mang_percent" className="form-label">Percent</label>
+                                        <input type="number"
+                                            value={formCanMang.percent}
+                                            onChange={(e) => setFormCanMang({ ...formCanMang, percent: e.target.value })}
+                                            className="form-control" id="can_mang_percent" />
+                                    </div>
+                                    <button type="submit"
+                                        disabled={!formCanMang.name || !formCanMang.percent}
+                                        className="btn btn-success">{formCanMang.id ? "Cập nhật" : "Lưu"} cán màng</button>
+                                    <button type="reset"
+                                        onClick={() => {
+                                            setFormCanMang({ ...formCanMang, id: 0, name: "", percent: 300 });
+                                            setShowForm({ ...showForm, can_mang: false });
+                                        }}
+                                        className="btn btn-warning ml-2"> Hủy bỏ</button>
+                                </form>
+                            }
+                            <li className="d-flex justify-content-between align-items-center border-bottom pb-2 pt-2">
+                                <div className="box-info d-flex align-items-center">
+                                    <div className="box-info-id mr-2"><b>ID</b></div>
+                                    <div className="box-info-name mr-2"><b>Tên</b></div>
+                                    <div className="box-info-percent"><b>Percent</b></div>
+                                </div>
+                                <div className="box-action">
+                                    <span><b>Thao tác</b></span>
+                                </div>
+                            </li>
+                            {allCanMang && allCanMang.length > 0 && allCanMang.map(item => {
+                                return <li key={item.id} className="d-flex justify-content-between align-items-center border-bottom pb-2 pt-2">
+                                    <div className="box-info d-flex align-items-center">
+                                        <div className="box-info-id mr-2">{item.id}</div>
+                                        <div className="box-info-name mr-2">{item.name}</div>
+                                        <div className="box-info-point">{item.percent}</div>
+                                    </div>
+                                    <div className="box-action">
+                                        <button className="btn btn-secondary mr-2"
+                                            onClick={(e) => {
+                                                setFormCanMang({ ...formCanMang, name: item.name, percent: item.percent, id: item.id });
+                                                setShowForm({ ...showForm, can_mang: true });
+                                            }}
+                                        >Edit</button>
+                                        <button className="btn btn-danger"
+                                            onClick={(e) => deleteItem(e, item, 'product_can_mangs')}
                                         >Xóa</button>
                                     </div>
                                 </li>
@@ -402,10 +539,21 @@ function SettingApp() {
                                         className="btn btn-warning ml-2"> Hủy bỏ</button>
                                 </form>
                             }
+                            <li className="d-flex justify-content-between align-items-center border-bottom pb-2 pt-2">
+                                <div className="box-info d-flex align-items-center">
+                                    <div className="box-info-id mr-2"><b>ID</b></div>
+                                    <div className="box-info-name mr-2"><b>Tên</b></div>
+                                    <div className="box-info-percent"><b>Điểm</b></div>
+                                </div>
+                                <div className="box-action">
+                                    <span><b>Thao tác</b></span>
+                                </div>
+                            </li>
                             {allQuyCach && allQuyCach.length > 0 && allQuyCach.map(item => {
                                 return <li key={item.id} className="d-flex justify-content-between align-items-center border-bottom pb-2 pt-2">
                                     <div className="box-info d-flex align-items-center">
-                                        <div className="box-info-name">{item.name}</div>
+                                        <div className="box-info-id mr-2">{item.id}</div>
+                                        <div className="box-info-name mr-2">{item.name}</div>
                                         <div className="box-info-point">{item.point}</div>
                                     </div>
                                     <div className="box-action">
@@ -466,10 +614,21 @@ function SettingApp() {
                                         className="btn btn-warning ml-2"> Hủy bỏ</button>
                                 </form>
                             }
+                            <li className="d-flex justify-content-between align-items-center border-bottom pb-2 pt-2">
+                                <div className="box-info d-flex align-items-center">
+                                    <div className="box-info-id mr-2"><b>ID</b></div>
+                                    <div className="box-info-name mr-2"><b>Tên</b></div>
+                                    <div className="box-info-percent"><b>Số lượng</b></div>
+                                </div>
+                                <div className="box-action">
+                                    <span><b>Thao tác</b></span>
+                                </div>
+                            </li>
                             {allSoLuong && allSoLuong.length > 0 && allSoLuong.map(item => {
                                 return <li key={item.id} className="d-flex justify-content-between align-items-center border-bottom pb-2 pt-2">
                                     <div className="box-info d-flex align-items-center">
-                                        <div className="box-info-name">{item.name}</div>
+                                        <div className="box-info-name mr-2">{item.id}</div>
+                                        <div className="box-info-name mr-2">{item.name}</div>
                                         <div className="box-info-count">{item.count}</div>
                                     </div>
                                     <div className="box-action">
@@ -531,10 +690,21 @@ function SettingApp() {
                                         className="btn btn-warning ml-2"> Hủy bỏ</button>
                                 </form>
                             }
+                            <li className="d-flex justify-content-between align-items-center border-bottom pb-2 pt-2">
+                                <div className="box-info d-flex align-items-center">
+                                    <div className="box-info-id mr-2"><b>ID</b></div>
+                                    <div className="box-info-name mr-2"><b>Name</b></div>
+                                    <div className="box-info-percent"><b>Percent</b></div>
+                                </div>
+                                <div className="box-action">
+                                    <span><b>Thao tác</b></span>
+                                </div>
+                            </li>
                             {allThoiGian && allThoiGian.length > 0 && allThoiGian.map(item => {
                                 return <li key={item.id} className="d-flex justify-content-between align-items-center border-bottom pb-2 pt-2">
                                     <div className="box-info d-flex align-items-center">
-                                        <div className="box-info-name">{item.name}</div>
+                                        <div className="box-info-id mr-2">{item.id}</div>
+                                        <div className="box-info-name mr-2">{item.name}</div>
                                         <div className="box-info-percent">{item.percent}</div>
                                     </div>
                                     <div className="box-action">

@@ -10,6 +10,7 @@ $config['product'][$nametype]['sub'] = false;
 $config['product'][$nametype]['tags'] = false;
 $config['product'][$nametype]['view'] = true;
 $config['product'][$nametype]['import'] = true;
+$config['product'][$nametype]['options'] = true;
 $config['product'][$nametype]['export'] = true;
 $config['product'][$nametype]['copy'] = false;
 $config['product'][$nametype]['copy_image'] = false;
