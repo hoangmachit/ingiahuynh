@@ -141,11 +141,35 @@ function OptionsApp() {
                 </div>
                 <div className="card-body pb-3 pt-3">
                     <ul className="m-0 p-0">
+                        <li className="d-flex justify-content-between align-items-center mb-3 border-bottom pb-1 pt-1">
+                            <div className="box-info d-flex align-items-center">
+                                <div className="box-info-id mr-2">
+                                    <span>ID</span>
+                                </div>
+                                <div className="box-info-length-width mr-2">
+                                    <span>Kích thước</span>
+                                </div>
+                                <div className="box-info-length-width">
+                                    <span>Tổng options</span>
+                                </div>
+                            </div>
+                            <div className="box-action">
+                                <span>Thao tác</span>
+                            </div>
+                        </li>
                         {allKichThuoc && allKichThuoc.length > 0 && allKichThuoc.map(item => {
                             return (
                                 <li className="d-flex justify-content-between align-items-center mb-3 border-bottom pb-1 pt-1" key={item.id}>
-                                    <div className="box-info">
-                                        <span>{item.length}mm x {item.width}mm</span>
+                                    <div className="box-info d-flex align-items-center">
+                                        <div className="box-info-id mr-2">
+                                            <span><b>{item.id}</b></span>
+                                        </div>
+                                        <div className="box-info-length-width mr-2">
+                                            <span>{item.length}mm x {item.width}mm <span className="text-red">({item.total_items})</span></span>
+                                        </div>
+                                        <div className="box-info-length-width">
+                                            <span className={`badge bg-${item.status ? 'success' : 'secondary'}`}>{item.status ? 'Sử dụng' : 'Không sử dụng'}</span>
+                                        </div>
                                     </div>
                                     <div className="box-action">
                                         <button className="btn btn-primary"
