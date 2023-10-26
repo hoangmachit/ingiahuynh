@@ -399,7 +399,7 @@ function uploadExcelOptions()
             $mess = '';
             $filename = $func->changeTitle($_FILES["file-excel"]["name"]);
             move_uploaded_file($_FILES["file-excel"]["tmp_name"], $filename);
-
+            $now = (new DateTime())->format('Y-m-d H:i:s');
             require LIBRARIES . 'PHPExcel.php';
             require_once LIBRARIES . 'PHPExcel/IOFactory.php';
 
@@ -416,39 +416,156 @@ function uploadExcelOptions()
                     $productID = $cell->getValue();
 
                     $cell = $worksheet->getCellByColumnAndRow(1, $row);
-                    $productNum = $cell->getValue();
-                    $cell = $worksheet->getCellByColumnAndRow(2, $row);
                     $productName = $cell->getValue();
 
-                    $cell = $worksheet->getCellByColumnAndRow(3, $row);
+                    $cell = $worksheet->getCellByColumnAndRow(2, $row);
                     $productSlug = $cell->getValue();
 
                     /* Lấy sản phẩm theo id */
                     $productImport = $d->rawQueryOne("select id from #_product where id = ? limit 0,1", array($productID));
-					$dataProduct = [
-						'tenvi' => $productName,
-						'tenkhongdauvi' => $productSlug,
-						'type' => $type,
-						'hienthi' => $productShow ?? 0,
-					];
-					_dd($productImport);
-					try {
-						if (!$productImport) {
-							$insertProduct = $d->insert('product', $dataProduct);
-							if ($insertProduct) {
-								$dataSeo['idmuc'] = $insertProduct;
-								$dataSeo['com'] = 'product';
-								$dataSeo['type'] = $type;
-								$dataSeo['act'] = 'man';
-								$insertSeo = $d->insert('seo', $dataSeo);
-							}
-						} else {
-							$d->where('id', $productID);
-							$updateProduct = $d->update('product', $dataProduct);
-						}
-					} catch (\Throwable $th) {
-						$message = "Error";
-					}
+                    if ($productImport) {
+                        // get data kích thước
+                        $cell = $worksheet->getCellByColumnAndRow(3, $row);
+                        $stringKichThuoc = $cell->getValue();
+                        $arrayKichThuoc = explode("~", str_replace(" ", "", $stringKichThuoc));
+                        $arrayKichThuoc[] = $productID;
+                        $detailKichThuoc = $d->rawQueryOne("select id from #_product_kich_thuocs where length=? and width=? and product_id=?", $arrayKichThuoc);
+
+                        $ktLength = $arrayKichThuoc[0] ? (int) $arrayKichThuoc[0] : 0;
+                        $ktWidth = $arrayKichThuoc[1] ? (int) $arrayKichThuoc[1] : 0;
+                        if (!$detailKichThuoc && $ktLength && $ktWidth) {
+                            $ktID = $d->insert('product_kich_thuocs', [
+                                'length' => $ktLength,
+                                'width' => $ktWidth,
+                                'product_id' => $productID,
+                                'created_at' => $now,
+                                'updated_at' => $now,
+                            ]);
+                        } else {
+                            $ktID = $detailKichThuoc['id'];
+                        }
+                        // get data khổ in
+                        $cell = $worksheet->getCellByColumnAndRow(4, $row);
+                        $stringKhoIn = $cell->getValue();
+                        $arrayKhoIn = explode("x", str_replace(" ", "", $stringKhoIn));
+                        $detailKhoIn = $d->rawQueryOne("select id from #_product_kho_ins where `left`=? and `right`=?", $arrayKhoIn);
+
+                        // get data chất liệu
+                        $cell = $worksheet->getCellByColumnAndRow(5, $row);
+                        $stringChatLieu = $cell->getValue();
+                        $detailChatLieu = $d->rawQueryOne('select id from #_product_chat_lieus where `name`="' . $stringChatLieu . '"');
+
+                        if ($detailKhoIn && $detailChatLieu) {
+                            // get data số con khả thi trên 1 khổ decal
+                            // $cell = $worksheet->getCellByColumnAndRow(6, $row);
+                            // $totalCountDecal = $cell->getValue();
+
+                            // // get data GIÁ NL + IN 1M
+                            // $cell = $worksheet->getCellByColumnAndRow(7, $row);
+                            // $priceNlM2 = $cell->getValue();
+
+                            // // get data Giá ng NL
+                            // $cell = $worksheet->getCellByColumnAndRow(8, $row);
+                            // $priceNl = $cell->getValue();
+
+                            // // get data cán màng
+                            // $cell = $worksheet->getCellByColumnAndRow(9, $row);
+                            // $stringCanMang = $cell->getValue();
+                            // $arrayCanMang = explode(",", $stringCanMang);
+
+                            // // get data quy cách
+                            // $cell = $worksheet->getCellByColumnAndRow(10, $row);
+                            // $stringQuyCach = $cell->getValue();
+                            // $arrayQuyCach = explode(",", $stringQuyCach);
+
+                            // // get data mặt in
+                            // $cell = $worksheet->getCellByColumnAndRow(11, $row);
+                            // $stringMatIn = $cell->getValue();
+                            // $arrayMatIn = explode(",", $stringMatIn);
+
+                            // // get data số lượng
+                            // $cell = $worksheet->getCellByColumnAndRow(12, $row);
+                            // $stringSoLuong = $cell->getValue();
+                            // $arraySoLuong = explode(",", $stringSoLuong);
+
+                            // // get data số lượng
+                            // $cell = $worksheet->getCellByColumnAndRow(13, $row);
+                            // $stringThoiGian = $cell->getValue();
+                            // $arrayThoiGian = explode(",", $stringThoiGian);
+
+                            // $detailKichThuocChatLieu = $d->rawQueryOne("select id from #_product_kich_thuoc_chat_lieus where `kt_id`=? and `cl_id`=? and `ki_id`=?", array($ktID, $detailChatLieu['id'], $detailKhoIn['id']));
+                            // if (!$detailKichThuocChatLieu) {
+                            //     $dtKtID = $d->insert('product_kich_thuoc_chat_lieus', [
+                            //         'kt_id' => $ktID,
+                            //         'cl_id' => $detailChatLieu['id'],
+                            //         'ki_id' => $detailKhoIn['id'],
+                            //         'total_count_decal' => $totalCountDecal ?? 0,
+                            //         'price_nl_m2' => $priceNlM2 ?? 0,
+                            //         'price_nl' => $priceNl ?? 0,
+                            //         'created_at' => $now,
+                            //         'updated_at' => $now,
+                            //     ]);
+                            // } else {
+                            //     $dtKtID = $detailKichThuocChatLieu['id'];
+                            // }
+                           
+                            // if (!empty($arrayCanMang)) {
+                            //     foreach ($arrayCanMang as $key => $item) {
+                            //         $detail = $d->rawQueryOne('select id from #_product_can_mangs where `name`="' . $item . '"');
+                            //         if ($detail) {
+                            //             $d->insert('product_kich_thuoc_chat_lieu_can_mangs', [
+                            //                 'ktcl_id' => $dtKtID,
+                            //                 'cm_id' => $detail['id'],
+                            //             ]);
+                            //         }
+                            //     }
+                            // }
+                            // if (!empty($arrayQuyCach)) {
+                            //     foreach ($arrayQuyCach as $key => $item) {
+                            //         $detail = $d->rawQueryOne('select id from #_product_quy_cachs where `name`="' . $item . '"');
+                            //         if ($detail) {
+                            //             $d->insert('product_kich_thuoc_chat_lieu_quy_cachs', [
+                            //                 'ktcl_id' => $dtKtID,
+                            //                 'cm_id' => $detail['id'],
+                            //             ]);
+                            //         }
+                            //     }
+                            // }
+                            // if (!empty($arrayMatIn)) {
+                            //     foreach ($arrayMatIn as $key => $item) {
+                            //         $detail = $d->rawQueryOne('select id from #_product_mat_ins where `name`="' . $item . '"');
+                            //         if ($detail) {
+                            //             $d->insert('product_kich_thuoc_chat_lieu_mat_ins', [
+                            //                 'ktcl_id' => $dtKtID,
+                            //                 'cm_id' => $detail['id'],
+                            //             ]);
+                            //         }
+                            //     }
+                            // }
+                            // if (!empty($arraySoLuong)) {
+                            //     foreach ($arraySoLuong as $key => $item) {
+                            //         $detail = $d->rawQueryOne('select id from #_product_so_luongs where `name`="' . $item . '"');
+                            //         if ($detail) {
+                            //             $d->insert('product_kich_thuoc_chat_lieu_soluongs', [
+                            //                 'ktcl_id' => $dtKtID,
+                            //                 'sl_id' => $detail['id'],
+                            //             ]);
+                            //         }
+                            //     }
+                            // }
+                            // if (!empty($arrayThoiGian)) {
+                            //     foreach ($arrayThoiGian as $key => $item) {
+                            //         $detail = $d->rawQueryOne('select id from #_product_thoi_gians where `name`="' . $item . '"');
+                            //         if ($detail) {
+                            //             $d->insert('product_kich_thuoc_chat_lieu_thoi_gians', [
+                            //                 'ktcl_id' => $dtKtID,
+                            //                 'tg_id' => $detail['id'],
+                            //             ]);
+                            //         }
+                            //     }
+                            // }
+                        }
+                    }
                 }
             }
 

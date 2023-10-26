@@ -237,7 +237,7 @@ function exportOptions()
 					$kichThuocId = $kichThuoc[$k_index]['id'];
 					$dsKichThuocChatLieu = $d->rawQuery("select id,total_count_decal,price_nl_m2,price_nl,cl_id,ki_id from #_product_kich_thuoc_chat_lieus where kt_id= ?", array($kichThuocId));
 					foreach ($arrayKT as $k => $v) {
-						$datacell = $kichThuoc[$k_index]['length'] . " ~ " . $kichThuoc[$k_index]['width'];
+						$datacell = $kichThuoc[$k_index]['length'] . "~" . $kichThuoc[$k_index]['width'];
 						$PHPExcel->setActiveSheetIndex(0)->setCellValue($alphas[$jj] . $vitri, htmlspecialchars_decode($datacell));
 						$jj++;
 					}
@@ -248,7 +248,7 @@ function exportOptions()
 							$arrayMerge = array_merge($array_file, $arrayKT);
 							foreach ($arrayMerge as $kP => $vP) {
 								if($kP == 'kich_thuoc'){
-									$datacell = $kichThuoc[$k_index]['length'] . " ~ " . $kichThuoc[$k_index]['width'];
+									$datacell = $kichThuoc[$k_index]['length'] . "~" . $kichThuoc[$k_index]['width'];
 								}else{
 									$datacell = $products[$i][$kP];
 								}
@@ -272,9 +272,9 @@ function exportOptions()
 							$stringMatIn = '';
 							if (!empty($dsMatIn)) {
 								foreach ($dsMatIn as $key => $mi) {
-									$stringMatIn .= $mi['name'] . ', ';
+									$stringMatIn .= $mi['name'] . ',';
 								}
-								$stringMatIn = rtrim($stringMatIn, ', ');
+								$stringMatIn = rtrim($stringMatIn, ',');
 							}
 							// get danh sách cán màng
 							$dsCanMang = $d->rawQuery("SELECT s1.id AS id1, s1.cm_id AS cm_id, s2.name AS name, s2.percent AS percent
@@ -283,9 +283,9 @@ function exportOptions()
 							$stringCanMang = '';
 							if (!empty($dsCanMang)) {
 								foreach ($dsCanMang as $key => $cm) {
-									$stringCanMang .= $cm['name'] . ', ';
+									$stringCanMang .= $cm['name'] . ',';
 								}
-								$stringCanMang = rtrim($stringCanMang, ', ');
+								$stringCanMang = rtrim($stringCanMang, ',');
 							}
 							// get danh sách quy cách
 							$dsQuyCach = $d->rawQuery("SELECT s1.id AS id1, s1.qc_id AS qc_id, s2.name AS name, s2.point AS point
@@ -295,9 +295,9 @@ function exportOptions()
 							$stringQuyCach = '';
 							if (!empty($dsQuyCach)) {
 								foreach ($dsQuyCach as $key => $qc) {
-									$stringQuyCach .= $qc['name'] . ', ';
+									$stringQuyCach .= $qc['name'] . ',';
 								}
-								$stringQuyCach = rtrim($stringQuyCach, ', ');
+								$stringQuyCach = rtrim($stringQuyCach, ',');
 							}
 
 
@@ -309,9 +309,9 @@ function exportOptions()
 							$stringSoLuong = '';
 							if (!empty($dsSoLuong)) {
 								foreach ($dsSoLuong as $key => $sl) {
-									$stringSoLuong .= $sl['name'] . ', ';
+									$stringSoLuong .= $sl['name'] . ',';
 								}
-								$stringSoLuong = rtrim($stringSoLuong, ', ');
+								$stringSoLuong = rtrim($stringSoLuong, ',');
 							}
 
 							// get danh sách thời gian
@@ -322,9 +322,9 @@ function exportOptions()
 							$stringThoiGian = '';
 							if (!empty($dsThoiGian)) {
 								foreach ($dsThoiGian as $key => $tg) {
-									$stringThoiGian .= $tg['name'] . ', ';
+									$stringThoiGian .= $tg['name'] . ',';
 								}
-								$stringThoiGian = rtrim($stringThoiGian, ', ');
+								$stringThoiGian = rtrim($stringThoiGian, ',');
 							}
 
 							foreach ($arrayKTCL as $k3 => $v3) {
