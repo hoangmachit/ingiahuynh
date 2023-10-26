@@ -245,11 +245,11 @@ function SettingApp() {
                             {allChatLieu && allChatLieu.length > 0 && allChatLieu.map(item => {
                                 return <li key={item.id} className="d-flex justify-content-between align-items-center border-bottom pb-2 pt-2">
                                     <div className="box-info d-flex align-items-center">
-                                        <div className="box-id">
+                                        <div className="box-id mr-2">
                                             <span>{item.id}</span>
                                         </div>
                                         <div className="box-info">
-                                            <span>{item.name}</span>
+                                            <span><b>{item.name}</b></span>
                                         </div>
                                     </div>
                                     <div className="box-action">
@@ -326,7 +326,7 @@ function SettingApp() {
                                             <span>{item.id}</span>
                                         </div>
                                         <div className="box-info">
-                                            <span>{item.left}x{item.right}</span>
+                                            <span><b>{item.left}x{item.right}</b></span>
                                         </div>
                                     </div>
                                     <div className="box-action">
@@ -401,7 +401,7 @@ function SettingApp() {
                                 return <li key={item.id} className="d-flex justify-content-between align-items-center border-bottom pb-2 pt-2">
                                     <div className="box-info d-flex align-items-center">
                                         <div className="box-info-id mr-2">{item.id}</div>
-                                        <div className="box-info-name mr-2">{item.name}</div>
+                                        <div className="box-info-name mr-2"><b>{item.name}</b></div>
                                         <div className="box-info-percent">{item.percent}</div>
                                     </div>
                                     <div className="box-action">
@@ -477,7 +477,7 @@ function SettingApp() {
                                 return <li key={item.id} className="d-flex justify-content-between align-items-center border-bottom pb-2 pt-2">
                                     <div className="box-info d-flex align-items-center">
                                         <div className="box-info-id mr-2">{item.id}</div>
-                                        <div className="box-info-name mr-2">{item.name}</div>
+                                        <div className="box-info-name mr-2"><b>{item.name}</b></div>
                                         <div className="box-info-point">{item.percent}</div>
                                     </div>
                                     <div className="box-action">
@@ -553,7 +553,7 @@ function SettingApp() {
                                 return <li key={item.id} className="d-flex justify-content-between align-items-center border-bottom pb-2 pt-2">
                                     <div className="box-info d-flex align-items-center">
                                         <div className="box-info-id mr-2">{item.id}</div>
-                                        <div className="box-info-name mr-2">{item.name}</div>
+                                        <div className="box-info-name mr-2"><b>{item.name}</b></div>
                                         <div className="box-info-point">{item.point}</div>
                                     </div>
                                     <div className="box-action">
@@ -628,7 +628,7 @@ function SettingApp() {
                                 return <li key={item.id} className="d-flex justify-content-between align-items-center border-bottom pb-2 pt-2">
                                     <div className="box-info d-flex align-items-center">
                                         <div className="box-info-name mr-2">{item.id}</div>
-                                        <div className="box-info-name mr-2">{item.name}</div>
+                                        <div className="box-info-name mr-2"><b>{item.name}</b></div>
                                         <div className="box-info-count">{item.count}</div>
                                     </div>
                                     <div className="box-action">
@@ -704,8 +704,8 @@ function SettingApp() {
                                 return <li key={item.id} className="d-flex justify-content-between align-items-center border-bottom pb-2 pt-2">
                                     <div className="box-info d-flex align-items-center">
                                         <div className="box-info-id mr-2">{item.id}</div>
-                                        <div className="box-info-name mr-2">{item.name}</div>
-                                        <div className="box-info-percent">{item.percent}</div>
+                                        <div className="box-info-name mr-2"><b>{item.name}</b></div>
+                                        <div className="box-info-percent">{item.percent}%</div>
                                     </div>
                                     <div className="box-action">
                                         <button className="btn btn-secondary mr-2"

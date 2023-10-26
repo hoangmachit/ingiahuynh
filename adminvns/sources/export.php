@@ -237,7 +237,7 @@ function exportOptions()
 					$kichThuocId = $kichThuoc[$k_index]['id'];
 					$dsKichThuocChatLieu = $d->rawQuery("select id,total_count_decal,price_nl_m2,price_nl,cl_id,ki_id from #_product_kich_thuoc_chat_lieus where kt_id= ?", array($kichThuocId));
 					foreach ($arrayKT as $k => $v) {
-						$datacell = $kichThuoc[$k_index]['length'] . "~" . $kichThuoc[$k_index]['width'];
+						$datacell = $kichThuoc[$k_index]['length'] . "x" . $kichThuoc[$k_index]['width'];
 						$PHPExcel->setActiveSheetIndex(0)->setCellValue($alphas[$jj] . $vitri, htmlspecialchars_decode($datacell));
 						$jj++;
 					}
@@ -248,7 +248,7 @@ function exportOptions()
 							$arrayMerge = array_merge($array_file, $arrayKT);
 							foreach ($arrayMerge as $kP => $vP) {
 								if($kP == 'kich_thuoc'){
-									$datacell = $kichThuoc[$k_index]['length'] . "~" . $kichThuoc[$k_index]['width'];
+									$datacell = $kichThuoc[$k_index]['length'] . "x" . $kichThuoc[$k_index]['width'];
 								}else{
 									$datacell = $products[$i][$kP];
 								}

@@ -15,7 +15,6 @@ if (isset($config['product'])) {
     if (!count($arrCheck) || !in_array($type, $arrCheck)) {
         $func->transfer("Trang không tồn tại", "index.php", false);
     }
-
 } else {
     $func->transfer("Trang không tồn tại", "index.php", false);
 }
@@ -88,7 +87,6 @@ function editImages()
     if (!$item['id']) {
         $func->transfer("Dữ liệu không có thực", "index.php?com=import&act=man&type=" . $type . "&p=" . $curPage, false);
     }
-
 }
 
 /* Save image */
@@ -119,7 +117,6 @@ function saveImages()
                 } else {
                     $func->transfer("Cập nhật dữ liệu bị lỗi", "index.php?com=import&act=man&type=" . $type . "&p=" . $curPage, false);
                 }
-
             } else {
                 $func->transfer("Không nhận được hình ảnh mới", "index.php?com=import&act=editImages&id=" . $id . "&type=" . $type . "&p=" . $curPage, false);
             }
@@ -187,7 +184,6 @@ function deleteImages()
         } else {
             $func->transfer("Xóa dữ liệu bị lỗi", "index.php?com=import&act=man&type=" . $type . "&p=" . $curPage, false);
         }
-
     } elseif (isset($_GET['listid'])) {
         $listid = explode(",", $_GET['listid']);
 
@@ -205,7 +201,6 @@ function deleteImages()
     } else {
         $func->transfer("Không nhận được dữ liệu", "index.php?com=import&act=man&type=" . $type . "&p=" . $curPage, false);
     }
-
 }
 
 /* Transfer image */
@@ -352,6 +347,7 @@ function uploadExcel()
                             }
                         } else {
                             $d->where('id', $productID);
+
                             $updateProduct = $d->update('product', $dataProduct);
                             if ($updateProduct) {
                                 $seoProduct = $d->rawQueryOne("select id from table_seo where com='product' and act='man' and TYPE =? and idmuc=?", array($type, $productID));
@@ -419,10 +415,10 @@ function uploadExcelOptions()
                     $productIDOld = $cell->getValue();
 
                     /* Lấy sản phẩm theo id */
-                    if($row==2){
+                    if ($row == 2) {
                         $productImport = $d->rawQueryOne("select id from #_product where id = ? limit 0,1", array($productID));
-                    }else{
-                        if(!$productID != $productIDOld){
+                    } else {
+                        if (!$productID != $productIDOld) {
                             $productImport = $d->rawQueryOne("select id from #_product where id = ? limit 0,1", array($productID));
                         }
                     }
@@ -456,7 +452,6 @@ function uploadExcelOptions()
                         $cell = $worksheet->getCellByColumnAndRow(5, $row);
                         $stringChatLieu = $cell->getValue();
                         $detailChatLieu = $d->rawQueryOne('select id from #_product_chat_lieus where `name`="' . $stringChatLieu . '"');
-
                         if ($detailKhoIn && $detailChatLieu) {
                             // get data số con khả thi trên 1 khổ decal
                             $cell = $worksheet->getCellByColumnAndRow(6, $row);
@@ -473,27 +468,27 @@ function uploadExcelOptions()
                             // get data cán màng
                             $cell = $worksheet->getCellByColumnAndRow(9, $row);
                             $stringCanMang = $cell->getValue();
-                            $arrayCanMang = explode(",", $stringCanMang);
+                            $arrayCanMang = $stringCanMang ? explode(",", $stringCanMang) : [];
 
                             // get data quy cách
                             $cell = $worksheet->getCellByColumnAndRow(10, $row);
                             $stringQuyCach = $cell->getValue();
-                            $arrayQuyCach = explode(",", $stringQuyCach);
+                            $arrayQuyCach = $stringQuyCach ? explode(",", $stringQuyCach) : [];
 
                             // get data mặt in
                             $cell = $worksheet->getCellByColumnAndRow(11, $row);
                             $stringMatIn = $cell->getValue();
-                            $arrayMatIn = explode(",", $stringMatIn);
+                            $arrayMatIn = $stringMatIn ? explode(",", $stringMatIn) : [];
 
                             // get data số lượng
                             $cell = $worksheet->getCellByColumnAndRow(12, $row);
                             $stringSoLuong = $cell->getValue();
-                            $arraySoLuong = explode(",", $stringSoLuong);
+                            $arraySoLuong = $stringSoLuong ? explode(",", $stringSoLuong) : [];
 
                             // get data số lượng
                             $cell = $worksheet->getCellByColumnAndRow(13, $row);
                             $stringThoiGian = $cell->getValue();
-                            $arrayThoiGian = explode(",", $stringThoiGian);
+                            $arrayThoiGian = $stringThoiGian ? explode(",", $stringThoiGian) : [];
 
                             $detailKichThuocChatLieu = $d->rawQueryOne("select id from #_product_kich_thuoc_chat_lieus where `kt_id`=? and `cl_id`=? and `ki_id`=?", array($ktID, $detailChatLieu['id'], $detailKhoIn['id']));
                             if (!$detailKichThuocChatLieu) {
@@ -509,67 +504,235 @@ function uploadExcelOptions()
                                 ]);
                             } else {
                                 $dtKtID = $detailKichThuocChatLieu['id'];
+                                $d->where('id', $dtKtID);
+                                $d->update('product_kich_thuoc_chat_lieus', [
+                                    'kt_id' => $ktID,
+                                    'cl_id' => $detailChatLieu['id'],
+                                    'ki_id' => $detailKhoIn['id'],
+                                    'total_count_decal' => $totalCountDecal ?? 0,
+                                    'price_nl_m2' => $priceNlM2 ?? 0,
+                                    'price_nl' => $priceNl ?? 0,
+                                    'updated_at' => $now,
+                                ]);
                             }
+                            $lsCanMang = $d->rawQuery('select cm_id from #_product_kich_thuoc_chat_lieu_can_mangs where ktcl_id=?', array($dtKtID));
                             if (!empty($arrayCanMang)) {
-                                foreach ($arrayCanMang as $key => $item) {
-                                    $detail = $d->rawQueryOne('select id from #_product_can_mangs where `name`="' . $item . '"');
-                                    if ($detail) {
+                                // insert
+                                $qCanMang = '';
+                                foreach ($arrayCanMang as $key => $v) {
+                                    $qCanMang .= ",'" . $v . "'";
+                                }
+                                $qCanMang = substr($qCanMang, 1);
+                                $dsCanMang = $d->rawQuery('select id from #_product_can_mangs where name in(' . $qCanMang . ')');
+
+                                // get ds canmang id
+                                $ids = [];
+                                foreach ($lsCanMang as $key => $v) {
+                                    $ids[] = $v['cm_id'];
+                                }
+                                foreach ($dsCanMang as $key => $v) {
+                                    if (in_array($v['id'], $ids)) {
+                                        $ids = array_diff($ids, [$v['id']]);
+                                    } else {
                                         $d->insert('product_kich_thuoc_chat_lieu_can_mangs', [
                                             'ktcl_id' => $dtKtID,
-                                            'cm_id' => $detail['id'],
+                                            'cm_id' => $v['id'],
                                             'created_at' => $now,
                                             'updated_at' => $now,
                                         ]);
                                     }
                                 }
+                                if (!empty($ids)) {
+                                    $cmRemove = "";
+                                    foreach ($ids as $key => $v) {
+                                        $cmRemove .= "," . $v;
+                                    }
+                                    $cmRemove = substr($cmRemove, 1);
+                                    $d->rawQuery('delete from #_product_kich_thuoc_chat_lieu_can_mangs where cm_id in(' . $cmRemove . ') and ktcl_id=?', array($dtKtID));
+                                }
+                            } else if (!empty($lsCanMang)) {
+                                //delete
+                                $lsDeleteCM = "";
+                                foreach ($lsCanMang as $key => $c) {
+                                    $lsDeleteCM .= ',' . $c['id'];
+                                }
+                                $lsDeleteCM = substr($lsDeleteCM, 1);
+                                $d->rawQuery('delete from #_product_kich_thuoc_chat_lieu_can_mangs where id in(' . $lsDeleteCM . ')');
                             }
+
+                            $lsQuyCach = $d->rawQuery("select id, qc_id from #_product_kich_thuoc_chat_lieu_quy_cachs where ktcl_id=?", array($dtKtID));
                             if (!empty($arrayQuyCach)) {
-                                foreach ($arrayQuyCach as $key => $item) {
-                                    $detail = $d->rawQueryOne('select id from #_product_quy_cachs where `name`="' . $item . '"');
-                                    if ($detail) {
+                                // insert
+                                $qQuyCach = '';
+                                foreach ($arrayQuyCach as $key => $v) {
+                                    $qQuyCach .= ",'" . $v . "'";
+                                }
+                                $qQuyCach = substr($qQuyCach, 1);
+                                $dsQuyCach = $d->rawQuery('select id from #_product_quy_cachs where name in(' . $qQuyCach . ')');
+                                // get ds quy cach id
+                                $ids = [];
+                                foreach ($lsQuyCach as $key => $v) {
+                                    $ids[] = $v['qc_id'];
+                                }
+                                foreach ($dsQuyCach as $key => $v) {
+                                    if (in_array($v['id'], $ids)) {
+                                        $ids = array_diff($ids, [$v['id']]);
+                                    } else {
                                         $d->insert('product_kich_thuoc_chat_lieu_quy_cachs', [
                                             'ktcl_id' => $dtKtID,
-                                            'qc_id' => $detail['id'],
+                                            'qc_id' => $v['id'],
                                             'created_at' => $now,
                                             'updated_at' => $now,
                                         ]);
                                     }
                                 }
+                                if (!empty($ids)) {
+                                    $qcRemove = "";
+                                    foreach ($ids as $key => $v) {
+                                        $qcRemove .= "," . $v;
+                                    }
+                                    $qcRemove = substr($qcRemove, 1);
+                                    $d->rawQuery('delete from #_product_kich_thuoc_chat_lieu_quy_cachs where qc_id in(' . $qcRemove . ') and ktcl_id=?', array($dtKtID));
+                                }
+                            } else if (!empty($lsQuyCach)) {
+                                //delete
+                                $lsDeleteQC = "";
+                                foreach ($lsQuyCach as $key => $c) {
+                                    $lsDeleteQC .= ',' . $c['id'];
+                                }
+                                $lsDeleteQC = substr($lsDeleteQC, 1);
+                                $d->rawQuery('delete from #_product_kich_thuoc_chat_lieu_quy_cachs where id in(' . $lsDeleteQC . ')');
                             }
+
+                            $lsMatIn = $d->rawQuery("select id, mi_id from #_product_kich_thuoc_chat_lieu_mat_ins where ktcl_id=?", array($dtKtID));
                             if (!empty($arrayMatIn)) {
-                                foreach ($arrayMatIn as $key => $item) {
-                                    $detail = $d->rawQueryOne('select id from #_product_mat_ins where `name`="' . $item . '"');
-                                    if ($detail) {
+                                // insert
+                                $qMatIn = '';
+                                foreach ($arrayMatIn as $key => $v) {
+                                    $qMatIn .= ",'" . $v . "'";
+                                }
+                                $qMatIn = substr($qMatIn, 1);
+                                $dsMatIn = $d->rawQuery('select id from #_product_mat_ins where name in(' . $qMatIn . ')');
+                                // get ds mat in id
+                                $ids = [];
+                                foreach ($lsMatIn as $key => $v) {
+                                    $ids[] = $v['mi_id'];
+                                }
+                                foreach ($dsMatIn as $key => $v) {
+                                    if (in_array($v['id'], $ids)) {
+                                        $ids = array_diff($ids, [$v['id']]);
+                                    } else {
                                         $d->insert('product_kich_thuoc_chat_lieu_mat_ins', [
                                             'ktcl_id' => $dtKtID,
-                                            'mi_id' => $detail['id'],
+                                            'mi_id' => $v['id'],
                                             'created_at' => $now,
                                             'updated_at' => $now,
                                         ]);
                                     }
                                 }
+                                if (!empty($ids)) {
+                                    $miRemove = "";
+                                    foreach ($ids as $key => $v) {
+                                        $miRemove .= "," . $v;
+                                    }
+                                    $miRemove = substr($miRemove, 1);
+                                    $d->rawQuery('delete from #_product_kich_thuoc_chat_lieu_mat_ins where mi_id in(' . $miRemove . ') and ktcl_id=?', array($dtKtID));
+                                }
+                            } else if (!empty($lsMatIn)) {
+                                //delete
+                                $lsDeleteMI = "";
+                                foreach ($lsMatIn as $key => $c) {
+                                    $lsDeleteMI .= ',' . $c['id'];
+                                }
+                                $lsDeleteMI = substr($lsDeleteMI, 1);
+                                $d->rawQuery('delete from #_product_kich_thuoc_chat_lieu_mat_ins where id in(' . $lsDeleteMI . ')');
                             }
+
+                            $lsSoLuong = $d->rawQuery("select id, sl_id from #_product_kich_thuoc_chat_lieu_soluongs where ktcl_id=?", array($dtKtID));
                             if (!empty($arraySoLuong)) {
-                                foreach ($arraySoLuong as $key => $item) {
-                                    $detail = $d->rawQueryOne('select id from #_product_so_luongs where `name`="' . $item . '"');
-                                    if ($detail) {
+                                // insert
+                                $qSoLuong = '';
+                                foreach ($arraySoLuong as $key => $v) {
+                                    $qSoLuong .= ",'" . $v . "'";
+                                }
+                                $qSoLuong = substr($qSoLuong, 1);
+                                $dsSoLuong = $d->rawQuery('select id from #_product_so_luongs where name in(' . $qSoLuong . ')');
+                                // get ds mat in id
+                                $ids = [];
+                                foreach ($lsSoLuong as $key => $v) {
+                                    $ids[] = $v['sl_id'];
+                                }
+                                foreach ($dsSoLuong as $key => $v) {
+                                    if (in_array($v['id'], $ids)) {
+                                        $ids = array_diff($ids, [$v['id']]);
+                                    } else {
                                         $d->insert('product_kich_thuoc_chat_lieu_soluongs', [
                                             'ktcl_id' => $dtKtID,
-                                            'sl_id' => $detail['id'],
+                                            'sl_id' => $v['id'],
+                                            'created_at' => $now,
+                                            'updated_at' => $now,
                                         ]);
                                     }
                                 }
+                                if (!empty($ids)) {
+                                    $slRemove = "";
+                                    foreach ($ids as $key => $v) {
+                                        $slRemove .= "," . $v;
+                                    }
+                                    $slRemove = substr($slRemove, 1);
+                                    $d->rawQuery('delete from #_product_kich_thuoc_chat_lieu_soluongs where sl_id in(' . $slRemove . ') and ktcl_id=?', array($dtKtID));
+                                }
+                            } else if (!empty($lsSoLuong)) {
+                                //delete
+                                $lsDeleteSL = "";
+                                foreach ($lsSoLuong as $key => $c) {
+                                    $lsDeleteSL .= ',' . $c['id'];
+                                }
+                                $lsDeleteSL = substr($lsDeleteSL, 1);
+                                $d->rawQuery('delete from #_product_kich_thuoc_chat_lieu_soluongs where id in(' . $lsDeleteSL . ')');
                             }
+                            $lsThoiGian = $d->rawQuery("select id, tg_id from #_product_kich_thuoc_chat_lieu_thoi_gians where ktcl_id=?", array($dtKtID));
                             if (!empty($arrayThoiGian)) {
-                                foreach ($arrayThoiGian as $key => $item) {
-                                    $detail = $d->rawQueryOne('select id from #_product_thoi_gians where `name`="' . $item . '"');
-                                    if ($detail) {
+                                // insert
+                                $qThoiGian = '';
+                                foreach ($arrayThoiGian as $key => $v) {
+                                    $qThoiGian .= ",'" . $v . "'";
+                                }
+                                $qThoiGian = substr($qThoiGian, 1);
+                                $dsThoiGian = $d->rawQuery('select id from #_product_thoi_gians where name in(' . $qThoiGian . ')');
+                                // get ds mat in id
+                                $ids = [];
+                                foreach ($lsThoiGian as $key => $v) {
+                                    $ids[] = $v['tg_id'];
+                                }
+                                foreach ($dsThoiGian as $key => $v) {
+                                    if (in_array($v['id'], $ids)) {
+                                        $ids = array_diff($ids, [$v['id']]);
+                                    } else {
                                         $d->insert('product_kich_thuoc_chat_lieu_thoi_gians', [
                                             'ktcl_id' => $dtKtID,
-                                            'tg_id' => $detail['id'],
+                                            'tg_id' => $v['id'],
+                                            'created_at' => $now,
+                                            'updated_at' => $now,
                                         ]);
                                     }
                                 }
+                                if (!empty($ids)) {
+                                    $tgRemove = "";
+                                    foreach ($ids as $key => $v) {
+                                        $tgRemove .= "," . $v;
+                                    }
+                                    $tgRemove = substr($tgRemove, 1);
+                                    $d->rawQuery('delete from #_product_kich_thuoc_chat_lieu_thoi_gians where tg_id in(' . $tgRemove . ') and ktcl_id=?', array($dtKtID));
+                                }
+                            } else if (!empty($lsThoiGian)) {
+                                //delete
+                                $lsDeleteTG = "";
+                                foreach ($lsThoiGian as $key => $c) {
+                                    $lsDeleteTG .= ',' . $c['id'];
+                                }
+                                $lsDeleteTG = substr($lsDeleteTG, 1);
+                                $d->rawQuery('delete from #_product_kich_thuoc_chat_lieu_thoi_gians where id in(' . $lsDeleteTG . ')');
                             }
                         }
                     }

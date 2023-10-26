@@ -571,8 +571,8 @@ function OptionsApp() {
                                 <li className="item__k" key={item.id}>
                                     <div className="form-group">
                                         <div>Sô con khả thi trên 1 khổ decal: <b>{item.total_count_decal}</b></div>
-                                        <div>Giá NL + ịn 1m: <b>{item.price_nl_m2}</b><dup>đ</dup></div>
-                                        <div>Giá ng NL: <b>{item.price_nl}</b><dup>đ</dup></div>
+                                        <div>Giá NL + ịn 1m: <b>{Intl.NumberFormat('vi-VN').format(item.price_nl_m2)}</b><sup>đ</sup></div>
+                                        <div>Giá ng NL: <b>{Intl.NumberFormat('vi-VN').format(item.price_nl)}</b><sup>đ</sup></div>
                                     </div>
                                     <div className="row">
                                         <fieldset className="col-md-4 mb-2">
@@ -627,7 +627,7 @@ function OptionsApp() {
                                                 <legend className="col-form-label pt-0"><b>Số lượng</b></legend>
                                                 <div>
                                                     {listSoLuong.map(item => {
-                                                        return <span key={item.id} className="badge bg-success mr-2">{item.count}</span>
+                                                        return <span key={item.id} className="badge bg-success mr-2">{item.name}</span>
                                                     })}
                                                 </div>
                                             </fieldset>
