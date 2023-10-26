@@ -225,6 +225,14 @@ function exportOptions()
 			$kichThuoc = $d->rawQuery("select id,length,width from #_product_kich_thuocs where product_id= ?", array($productId));
 			if (!empty($kichThuoc)) {
 				for ($k_index = 0; $k_index < count($kichThuoc); $k_index++) {
+					// add data product with kich thươc
+					$ktPosition = 0;
+					foreach ($array_file as $kP => $vP) {
+						$datacell = $products[$i][$kP];
+						$PHPExcel->setActiveSheetIndex(0)->setCellValue($alphas[$ktPosition] . $vitri, htmlspecialchars_decode($datacell));
+						$ktPosition++;
+					}
+					// end add data product with kich thươc
 					$jj = $j;
 					$kichThuocId = $kichThuoc[$k_index]['id'];
 					$dsKichThuocChatLieu = $d->rawQuery("select id,total_count_decal,price_nl_m2,price_nl,cl_id,ki_id from #_product_kich_thuoc_chat_lieus where kt_id= ?", array($kichThuocId));
@@ -235,6 +243,19 @@ function exportOptions()
 					}
 					if (!empty($dsKichThuocChatLieu)) {
 						for ($ktcl_index = 0; $ktcl_index < count($dsKichThuocChatLieu); $ktcl_index++) {
+							// add data product with kich thươc
+							$ktPosition = 0;
+							$arrayMerge = array_merge($array_file, $arrayKT);
+							foreach ($arrayMerge as $kP => $vP) {
+								if($kP == 'kich_thuoc'){
+									$datacell = $kichThuoc[$k_index]['length'] . " ~ " . $kichThuoc[$k_index]['width'];
+								}else{
+									$datacell = $products[$i][$kP];
+								}
+								$PHPExcel->setActiveSheetIndex(0)->setCellValue($alphas[$ktPosition] . $vitri, htmlspecialchars_decode($datacell));
+								$ktPosition++;
+							}
+							// end add data product with kich thươc
 							$jjj = $jj;
 							$kt_cl_id = $dsKichThuocChatLieu[$ktcl_index]['id'];
 							// get Chất Liệu
