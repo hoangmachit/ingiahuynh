@@ -116,16 +116,9 @@ function GoogleLanguageTranslatorInit(){new google.translate.TranslateElement({p
             thoiGianId: null,
         });
         const [totalPrice,setTotalPrice] = useState({});
-        const calculatorPrice = async () =>{
-            const res = await fetch(`${CONFIG_BASE}/api/post.price.php`,{
-                method:"POST",
-                body: JSON.stringify({dataChoice})
-            });
-            if(!res.ok){
-                new Error("123");
-            }
-            const resultPrice = await res.json();
-            console.log(">>> Result Price:", resultPrice);
+        const handlePrice = async (price)=>{
+            const docPrice =  document.getElementById("totalPrice");
+            docPrice.innerHTML = Intl.NumberFormat('vi-VN').format(price);
         }
         const getDataFirst = async()=>{
             const formData = new FormData();
@@ -135,31 +128,80 @@ function GoogleLanguageTranslatorInit(){new google.translate.TranslateElement({p
                 body:formData
             });
             if(!res.ok){
-                new Error("123");
+                new Error("Error");
             }
-            const { success, dsKichThuoc, ktActive, dsKTChatLieu, ktChatLieuActive, allDataForKTCL, allDataChoice, price } = await res.json();
+            const { success, dsKichThuoc, dsKTChatLieu, allDataForKTCL, allDataChoice, price } = await res.json();
             if(success){
                 await setAllKT(dsKichThuoc);
                 await setAllKTCL(dsKTChatLieu);
                 await setDataForKTCL(allDataForKTCL);
                 await setDataChoice(allDataChoice);
                 await setTotalPrice(price);
+                await handlePrice(price);
             }
         }
         useEffect(()=>{
             getDataFirst();
         },[]);
         const changeKichThuoc = async (e) =>{
+            const kichThuocId = e.target.value;
             e.preventDefault();
-            setDataChoice({...dataChoice,kichThuocId:e.target.value});
+            setDataChoice({...dataChoice,kichThuocId:kichThuocId});
+            const formData = new FormData();
+            formData.append('kichThuocId',kichThuocId);
+            const res = await fetch(`${CONFIG_BASE}/api/post.size.choice.php`,{
+                method:"POST",
+                body:formData
+            });
+            if(!res.ok){
+                new Error("Error");
+            }
+            const { success, dsKTChatLieu, allDataForKTCL, allDataChoice, price } = await res.json();
+            if(success){
+                await setAllKTCL(dsKTChatLieu);
+                await setDataForKTCL(allDataForKTCL);
+                await setDataChoice(allDataChoice);
+                await setTotalPrice(price);
+                await handlePrice(price);
+            }
         }
         const changeKTCL = async (e)=>{
             e.preventDefault();
+            const kichThuocChatLieuId = e.target.value;
             setDataChoice({...dataChoice,kichThuocChatLieuId:e.target.value});
+            const formData = new FormData();
+            formData.append('kichThuocChatLieuId',kichThuocChatLieuId);
+            formData.append('kichThuocId',dataChoice.kichThuocId);
+            const res = await fetch(`${CONFIG_BASE}/api/post.cl.choice.php`,{
+                method:"POST",
+                body:formData
+            });
+            if(!res.ok){
+                new Error("Error");
+            }
+            const { success, allDataForKTCL, allDataChoice, price } = await res.json();
+            if(success){
+                await setDataForKTCL(allDataForKTCL);
+                await setDataChoice(allDataChoice);
+                await setTotalPrice(price);
+                await handlePrice(price);
+            }
         }
         const changeDataForKTCL = async(e) =>{
             e.preventDefault();
             setDataChoice({...dataChoice,[e.target.name]:e.target.value});
+            const res = await fetch(`${CONFIG_BASE}/api/post.data-for-ktcl.php`,{
+                method:"POST",
+                body:JSON.stringify({dataChoice})
+            });
+            if(!res.ok){
+                new Error("Error");
+            }
+            const { success, price } = await res.json();
+            if(success){
+                await setTotalPrice(price);
+                await handlePrice(price);
+            }
         }
         return (
             <div>

@@ -43,7 +43,7 @@
                     <p>( Tham khảo dịch vụ thiết kế )</p>
                 </div>
                 <div class="pro-detail-total-price">
-                    <p>Thành tiền: <span id="totalPrice"><?=($row_detail['gia'] > 0 ? $func->format_money($row_detail['gia']) : 0)?></span></p>
+                    <p>Thành tiền: <span id="totalPrice">0</span></p>
                     <input type="hidden" name="total-price" id="total-price" value="<?=($row_detail['gia'] > 0 ? $row_detail['gia'] : 0)?>">
                     <input type="hidden" name="have-file" id="have-file" value="0">
                     <?php if (!empty($gif4)) {?>
