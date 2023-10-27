@@ -21,10 +21,10 @@ $config = array(
 		'email' => 'tanphat.vinasoftware@gmail.com',
 		'timefinish' => '09/2022'
 	),
-	'arrayDomainSSL' => array(''),
+	'arrayDomainSSL' => array('ingiahuynh.dev'),
 	'database' => array(
 		'server-name' => $_SERVER["SERVER_NAME"],
-		'url' => '/ingiahuynh/',
+		'url' => '/',
 		'type' => 'mysql',
 		'host' => 'localhost',
 		'username' => 'root',

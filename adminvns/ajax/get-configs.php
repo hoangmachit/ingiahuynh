@@ -13,7 +13,7 @@ echo json_encode([
         'canMang' => $canMang,
         'matIn' => $matIn,
         'quyCach' => $quyCach,
-        'soluong' => $soluong,
+        'soLuong' => $soluong,
         'thoiGian' => $thoiGian,
         'khoIn' => $khoIn,
         'chatLieu' => $chatLieu,

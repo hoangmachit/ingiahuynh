@@ -469,7 +469,7 @@ function OptionsApp() {
                                             <label className="form-label">Số lượng</label>
                                             <div className="row">
                                                 {
-                                                    configs && configs.matIn && configs.matIn.map(item => {
+                                                    configs && configs.soLuong && configs.soLuong.map(item => {
                                                         return <div className="col-md-4" key={item.id}>
                                                             <div className="form-check">
                                                                 <input className="form-check-input"
