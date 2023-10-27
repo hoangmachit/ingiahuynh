@@ -210,6 +210,7 @@ function GoogleLanguageTranslatorInit(){new google.translate.TranslateElement({p
         }
         if(loading){
             return <div className="loading-container">
+                        <p class="loading-label loading-title-main"></p>
                         <div className="item-skelete">
                             <div className="loading-title">
                                 <div className="loading-label"></div>

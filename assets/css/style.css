@@ -4264,7 +4264,11 @@ coccocgrammar {
     background: linear-gradient(90deg, transparent, #f0f0f0, transparent);
     animation: loading 1.5s infinite;
 }
-
+.loading-title-main{
+    line-height: 23px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
 .loading-skeleton::after {
     content: '';
     position: absolute;
