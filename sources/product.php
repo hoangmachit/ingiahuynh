@@ -28,16 +28,16 @@ if($id!='')
 	if($row_detail['id_mau']) $mau = $d->rawQuery("select loaihienthi, photo, mau, id from #_product_mau where type='".$type."' and find_in_set(id,'".$row_detail['id_mau']."') and hienthi > 0 order by stt,id desc");
 
 	/* Lấy size */
-	if($row_detail['id_size']) $size = $d->rawQuery("select id, ten$lang as ten from #_product_size where type='".$type."' and find_in_set(id,'".$row_detail['id_size']."') and hienthi > 0 order by stt,id desc");
-	if($row_detail['id_chatlieu']) $chatlieu = $d->rawQuery("select id, ten$lang as ten from #_product_size where type='".$type."' and find_in_set(id,'".$row_detail['id_chatlieu']."') and hienthi > 0 order by stt,id desc");
-	if($row_detail['id_somat']) $somat = $d->rawQuery("select id, ten$lang as ten from #_product_size where type='".$type."' and find_in_set(id,'".$row_detail['id_somat']."') and hienthi > 0 order by stt,id desc");
-	if($row_detail['id_canmang']) $canmang = $d->rawQuery("select id, ten$lang as ten from #_product_size where type='".$type."' and find_in_set(id,'".$row_detail['id_canmang']."') and hienthi > 0 order by stt,id desc");
-	if($row_detail['id_khoanlo']) $khoanlo = $d->rawQuery("select id, ten$lang as ten from #_product_size where type='".$type."' and find_in_set(id,'".$row_detail['id_khoanlo']."') and hienthi > 0 order by stt,id desc");
-	if($row_detail['id_soduongcung']) $soduongcung = $d->rawQuery("select id, ten$lang as ten from #_product_size where type='".$type."' and find_in_set(id,'".$row_detail['id_soduongcung']."') and hienthi > 0 order by stt,id desc");
-	if($row_detail['id_hinhdang']) $hinhdang = $d->rawQuery("select id, ten$lang as ten from #_product_size where type='".$type."' and find_in_set(id,'".$row_detail['id_hinhdang']."') and hienthi > 0 order by stt,id desc");
-	if($row_detail['id_cachthuc']) $cachthuc = $d->rawQuery("select id, ten$lang as ten from #_product_size where type='".$type."' and find_in_set(id,'".$row_detail['id_cachthuc']."') and hienthi > 0 order by stt,id desc");
-	if($row_detail['id_kieube']) $kieube = $d->rawQuery("select id, ten$lang as ten from #_product_size where type='".$type."' and find_in_set(id,'".$row_detail['id_kieube']."') and hienthi > 0 order by stt,id desc");
-	if($row_detail['id_soluong']) $soluong = $d->rawQuery("select id, ten$lang as ten from #_product_size where type='".$type."' and find_in_set(id,'".$row_detail['id_soluong']."') and hienthi > 0 order by stt,id desc");
+	// if($row_detail['id_size']) $size = $d->rawQuery("select id, ten$lang as ten from #_product_size where type='".$type."' and find_in_set(id,'".$row_detail['id_size']."') and hienthi > 0 order by stt,id desc");
+	// if($row_detail['id_chatlieu']) $chatlieu = $d->rawQuery("select id, ten$lang as ten from #_product_size where type='".$type."' and find_in_set(id,'".$row_detail['id_chatlieu']."') and hienthi > 0 order by stt,id desc");
+	// if($row_detail['id_somat']) $somat = $d->rawQuery("select id, ten$lang as ten from #_product_size where type='".$type."' and find_in_set(id,'".$row_detail['id_somat']."') and hienthi > 0 order by stt,id desc");
+	// if($row_detail['id_canmang']) $canmang = $d->rawQuery("select id, ten$lang as ten from #_product_size where type='".$type."' and find_in_set(id,'".$row_detail['id_canmang']."') and hienthi > 0 order by stt,id desc");
+	// if($row_detail['id_khoanlo']) $khoanlo = $d->rawQuery("select id, ten$lang as ten from #_product_size where type='".$type."' and find_in_set(id,'".$row_detail['id_khoanlo']."') and hienthi > 0 order by stt,id desc");
+	// if($row_detail['id_soduongcung']) $soduongcung = $d->rawQuery("select id, ten$lang as ten from #_product_size where type='".$type."' and find_in_set(id,'".$row_detail['id_soduongcung']."') and hienthi > 0 order by stt,id desc");
+	// if($row_detail['id_hinhdang']) $hinhdang = $d->rawQuery("select id, ten$lang as ten from #_product_size where type='".$type."' and find_in_set(id,'".$row_detail['id_hinhdang']."') and hienthi > 0 order by stt,id desc");
+	// if($row_detail['id_cachthuc']) $cachthuc = $d->rawQuery("select id, ten$lang as ten from #_product_size where type='".$type."' and find_in_set(id,'".$row_detail['id_cachthuc']."') and hienthi > 0 order by stt,id desc");
+	// if($row_detail['id_kieube']) $kieube = $d->rawQuery("select id, ten$lang as ten from #_product_size where type='".$type."' and find_in_set(id,'".$row_detail['id_kieube']."') and hienthi > 0 order by stt,id desc");
+	// if($row_detail['id_soluong']) $soluong = $d->rawQuery("select id, ten$lang as ten from #_product_size where type='".$type."' and find_in_set(id,'".$row_detail['id_soluong']."') and hienthi > 0 order by stt,id desc");
 
 	/* Lấy cấp 1 */
 	$pro_list = $d->rawQueryOne("select id, ten$lang as ten, tenkhongdauvi, tenkhongdauen from #_product_list where id = ? and type = ? and hienthi > 0 limit 0,1",array($row_detail['id_list'],$type));
