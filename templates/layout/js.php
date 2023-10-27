@@ -97,7 +97,6 @@ function GoogleLanguageTranslatorInit(){new google.translate.TranslateElement({p
     const productId = '<?=$id ?? 0?>';
     const { useState, useEffect, StrictMode } = React;
     function App() {
-        const [loading, setLoading] = useState(false);
         const [allKT, setAllKT] = useState([]);
         const [allKTCL, setAllKTCL] = useState([]);
         const [dataForKTCL, setDataForKTCL] = useState({
@@ -122,7 +121,6 @@ function GoogleLanguageTranslatorInit(){new google.translate.TranslateElement({p
             docPrice.innerHTML = Intl.NumberFormat('vi-VN').format(price);
         }
         const getDataFirst = async()=>{
-            setLoading(true);
             const formData = new FormData();
             formData.append('productId',productId);
             const res = await fetch(`${CONFIG_BASE}/api/post.size.php`,{
@@ -141,9 +139,6 @@ function GoogleLanguageTranslatorInit(){new google.translate.TranslateElement({p
                 await setTotalPrice(price);
                 await handlePrice(price);
             }
-            setTimeout(() => {
-                setLoading(false);
-            }, 500);
         }
         useEffect(()=>{
             getDataFirst();
@@ -207,47 +202,6 @@ function GoogleLanguageTranslatorInit(){new google.translate.TranslateElement({p
                 await setTotalPrice(price);
                 await handlePrice(price);
             }
-        }
-        if(loading){
-            return <div className="loading-container">
-                        <p class="loading-label loading-title-main"></p>
-                        <div className="item-skelete">
-                            <div className="loading-title">
-                                <div className="loading-label"></div>
-                            </div>
-                            <div className="loading-skeleton"></div>
-                        </div>
-                        <div className="item-skelete">
-                            <div className="loading-title">
-                                <div className="loading-label"></div>
-                            </div>
-                            <div className="loading-skeleton"></div>
-                        </div>
-                        <div className="item-skelete">
-                            <div className="loading-title">
-                                <div className="loading-label"></div>
-                            </div>
-                            <div className="loading-skeleton"></div>
-                        </div>
-                        <div className="item-skelete">
-                            <div className="loading-title">
-                                <div className="loading-label"></div>
-                            </div>
-                            <div className="loading-skeleton"></div>
-                        </div>
-                        <div className="item-skelete">
-                            <div className="loading-title">
-                                <div className="loading-label"></div>
-                            </div>
-                            <div className="loading-skeleton"></div>
-                        </div>
-                        <div className="item-skelete">
-                            <div className="loading-title">
-                                <div className="loading-label"></div>
-                            </div>
-                            <div className="loading-skeleton"></div>
-                        </div>
-                    </div>
         }
         return (
             <div>

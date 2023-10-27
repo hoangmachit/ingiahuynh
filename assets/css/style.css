@@ -4251,7 +4251,7 @@ coccocgrammar {
     height: 34px;
     border-radius: 25px;
     background-color: #f0f0f0;
-    margin-bottom: 10px;
+    margin-bottom: 9px;
 }
 
 .loading-skeleton::before {
@@ -4264,11 +4264,13 @@ coccocgrammar {
     background: linear-gradient(90deg, transparent, #f0f0f0, transparent);
     animation: loading 1.5s infinite;
 }
-.loading-title-main{
+
+.loading-title-main {
     line-height: 23px;
-    margin-top: 25px;
+    margin-top: 18px;
     margin-bottom: 10px;
 }
+
 .loading-skeleton::after {
     content: '';
     position: absolute;
@@ -4312,5 +4314,12 @@ coccocgrammar {
 }
 
 .item-skelete:nth-child(6) .loading-label {
-    width: 65%;
+    width: 70%;
+}
+
+.item-skelete:nth-child(7) .loading-label {
+    width: 77%;
+}
+.item-skelete:nth-child(8) .loading-label {
+    width: 62%;
 }

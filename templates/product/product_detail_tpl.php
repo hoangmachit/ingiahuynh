@@ -34,7 +34,53 @@
                     <?=(isset($row_detail['mota']) && $row_detail['mota'] != '') ? htmlspecialchars_decode($row_detail['mota']) : ''?>
                 </div>
                 <div class="attr-pro-detail" data-type="<?=$type?>">
-                    <div id="requirement"></div>
+                    <div id="requirement">
+                        <div class="loading-container">
+                            <p class="loading-label loading-title-main"></p>
+                            <div class="item-skelete">
+                                <div class="loading-title">
+                                    <div class="loading-label"></div>
+                                </div>
+                                <div class="loading-skeleton"></div>
+                            </div>
+                            <div class="item-skelete">
+                                <div class="loading-title">
+                                    <div class="loading-label"></div>
+                                </div>
+                                <div class="loading-skeleton"></div>
+                            </div>
+                            <div class="item-skelete">
+                                <div class="loading-title">
+                                    <div class="loading-label"></div>
+                                </div>
+                                <div class="loading-skeleton"></div>
+                            </div>
+                            <div class="item-skelete">
+                                <div class="loading-title">
+                                    <div class="loading-label"></div>
+                                </div>
+                                <div class="loading-skeleton"></div>
+                            </div>
+                            <div class="item-skelete">
+                                <div class="loading-title">
+                                    <div class="loading-label"></div>
+                                </div>
+                                <div class="loading-skeleton"></div>
+                            </div>
+                            <div class="item-skelete">
+                                <div class="loading-title">
+                                    <div class="loading-label"></div>
+                                </div>
+                                <div class="loading-skeleton"></div>
+                            </div>
+                            <div class="item-skelete">
+                                <div class="loading-title">
+                                    <div class="loading-label"></div>
+                                </div>
+                                <div class="loading-skeleton"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="pro-detail-file">
                     <p>Thiết kế sẵn sàng in của bạn sẽ được cung cấp như thế nào?</p>
