@@ -189,10 +189,11 @@ function GoogleLanguageTranslatorInit(){new google.translate.TranslateElement({p
         }
         const changeDataForKTCL = async(e) =>{
             e.preventDefault();
-            setDataChoice({...dataChoice,[e.target.name]:e.target.value});
+            const newDataChoice = {...dataChoice,[e.target.name]:e.target.value};
+            setDataChoice(newDataChoice);
             const res = await fetch(`${CONFIG_BASE}/api/post.data-for-ktcl.php`,{
                 method:"POST",
-                body:JSON.stringify({dataChoice})
+                body:JSON.stringify({dataChoice:newDataChoice})
             });
             if(!res.ok){
                 new Error("Error");
